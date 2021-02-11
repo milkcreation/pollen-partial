@@ -139,12 +139,12 @@ class Partial implements PartialInterface
         if (!$this->isBooted()) {
             //events()->trigger('partial.booting', [$this]);
 
-            $this->xhrRoute = Router::xhr(
+            /*$this->xhrRoute = Router::xhr(
                 md5('partial') . '/{partial}/{controller}',
                 [$this, 'xhrResponseDispatcher']
-            );
+            );*/
 
-            $this->registerDefaultDrivers();
+            //$this->registerDefaultDrivers();
 
             $this->setBooted();
             //events()->trigger('partial.booted', [$this]);
@@ -201,9 +201,11 @@ class Partial implements PartialInterface
         if ($def instanceof PartialDriverInterface) {
             return clone $def;
         }
+
         if (is_string($def) && $this->containerHas($def)) {
             return $this->containerGet($def);
         }
+
         if (is_string($def) && class_exists($def)) {
             return new $def($this);
         }
