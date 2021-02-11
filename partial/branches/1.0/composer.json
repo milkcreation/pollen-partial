@@ -1,0 +1,56 @@
+{
+  "name": "pollen-solutions/partial",
+  "description": "Pollen Partial Component - Partials collection.",
+  "homepage": "https://www.presstify.com/pollen-solutions/partial/",
+  "keywords": [
+    "pollen-solutions",
+    "component",
+    "partial"
+  ],
+  "time": "2021-02-11",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jordy Manner",
+      "email": "jordy@presstify.com",
+      "role": "Developper"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://composer.presstify.com/pollen-solutions/"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "composer/composer": "^2.0",
+    "composer/installers": "~1.0",
+    "pollen-solutions/container": "^1.0",
+    "pollen-solutions/http": "^1.0",
+    "pollen-solutions/routing": "^1.0",
+    "pollen-solutions/support": "^1.0",
+    "pollen-solutions/validation": "^1.0",
+    "pollen-solutions/view": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pollen\\Partial\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Pollen\\Partial\\Test\\": "tests"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
