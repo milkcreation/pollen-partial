@@ -351,7 +351,7 @@ abstract class PartialDriver implements PartialDriverInterface
             }
 
             if ($directory === null) {
-                $directory = $this->get('viewer.directory');
+                $directory = $this->get('viewer.directory', null);
                 if ($directory && !file_exists($directory)) {
                     $directory = null;
                 }
@@ -367,7 +367,7 @@ abstract class PartialDriver implements PartialDriverInterface
             }
 
             if ($overrideDir === null) {
-                $overrideDir = $this->get('viewer.override_dir');
+                $overrideDir = $this->get('viewer.override_dir', null);
                 if ($overrideDir && !file_exists($overrideDir)) {
                     $overrideDir = null;
                 }
