@@ -1,0 +1,91 @@
+// Variables
+@import "./variables";
+
+// Personnalisation
+.GridTable,
+.GridTable * {
+  box-sizing: border-box;
+}
+
+.GridTable-tr:before,
+.GridTable-tr:after {
+  display: table;
+  content: " ";
+}
+
+.GridTable-tr:after {
+  clear: both;
+}
+
+.GridTable-th,
+.GridTable-td {
+  float: left;
+
+  padding: 0.8em 1em;
+}
+
+.GridTable-tr--even {
+  background-color: #FFF;
+}
+
+.GridTable-tr--odd {
+  background-color: #F4F4F4;
+}
+
+.GridTable-cell1 {
+  width: 100%;
+}
+
+.GridTable-cell2 {
+  width: 50%;
+}
+
+.GridTable-cell3 {
+  width: 33.33333%;
+}
+
+.GridTable-cell4 {
+  width: 25%;
+}
+
+.GridTable-cell5 {
+  width: 20%;
+}
+
+.GridTable-cell6 {
+  width: 16.667%;
+}
+
+.GridTable-cell7 {
+  width: 14.286%;
+}
+
+.GridTable-cell8 {
+  width: 12.5%;
+}
+
+.GridTable-cell9 {
+  width: 11.112%;
+}
+
+.GridTable-cell10 {
+  width: 10%;
+}
+
+.GridTable-cellLabel {
+  display: none;
+}
+
+.GridTable-headTr {
+  border-bottom: solid 1px #CCC;
+}
+
+.GridTable-footTr {
+  border-top: solid 1px #CCC;
+}
+
+.GridTable-th {
+  background-color: #E4E4E4;
+  color: #333;
+  font-weight: 600;
+}
