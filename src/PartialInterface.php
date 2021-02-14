@@ -6,6 +6,7 @@ namespace Pollen\Partial;
 
 use Closure;
 use League\Route\Http\Exception\NotFoundException;
+use Pollen\Routing\RouterInterface;
 
 /**
  * @mixin \Pollen\Support\Concerns\BootableTrait
@@ -14,13 +15,6 @@ use League\Route\Http\Exception\NotFoundException;
  */
 interface PartialInterface
 {
-    /**
-     * Récupération de l'instance courante.
-     *
-     * @return static
-     */
-    public static function instance(): PartialInterface;
-
     /**
      * Récupération de la liste des pilote déclarés.
      *
@@ -47,15 +41,22 @@ interface PartialInterface
     public function get(string $alias, $idOrParams = null, ?array $params = []): ?PartialDriverInterface;
 
     /**
+     * Récupération de l'instance du gestionnaire de routage.
+     *
+     * @return RouterInterface|null
+     */
+    public function getRouter(): ?RouterInterface;
+
+    /**
      * Récupération de l'url de traitement des requêtes XHR.
      *
      * @param string $partial Alias de qualification du pilote associé.
      * @param string|null $controller Nom de qualification du controleur de traitement de la requête XHR.
      * @param array $params Liste de paramètres complémentaire transmis dans l'url
      *
-     * @return string
+     * @return string|null
      */
-    public function getXhrRouteUrl(string $partial, ?string $controller = null, array $params = []): string;
+    public function getXhrRouteUrl(string $partial, ?string $controller = null, array $params = []): ?string;
 
     /**
      * Déclaration d'un pilote.
@@ -74,6 +75,15 @@ interface PartialInterface
      * @return static
      */
     public function registerDefaultDrivers(): PartialInterface;
+
+    /**
+     * Définition de l'instance du gestionnaire de routage.
+     *
+     * @param RouterInterface $router
+     *
+     * @return PartialInterface
+     */
+    public function setRouter(RouterInterface $router): PartialInterface;
 
     /**
      * Répartiteur de traitement d'une requête XHR.
