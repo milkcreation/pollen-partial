@@ -33,6 +33,7 @@ use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TableDriver;
 use Pollen\Partial\Drivers\TagDriver;
 use Pollen\Routing\RouteInterface;
+use Pollen\Routing\RouterInterface;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagTrait;
 use Pollen\Support\Concerns\ContainerAwareTrait;
@@ -42,12 +43,6 @@ class Partial implements PartialInterface
     use BootableTrait;
     use ConfigBagTrait;
     use ContainerAwareTrait;
-
-    /**
-     * Instance de la classe.
-     * @var static|null
-     */
-    private static $instance;
 
     /**
      * Définition des pilotes par défaut.
@@ -85,16 +80,22 @@ class Partial implements PartialInterface
     private $drivers = [];
 
     /**
-     * Route de traitement des requêtes XHR.
-     * @var RouteInterface|null
-     */
-    private $xhrRoute;
-
-    /**
      * Liste des pilotes déclarés.
      * @var PartialDriverInterface[][]|Closure[][]|string[][]|array
      */
     protected $driverDefinitions = [];
+
+    /**
+     * Instance du gestionnaire de routage.
+     * @var RouterInterface|null
+     */
+    protected $router;
+
+    /**
+     * Route de traitement des requêtes XHR.
+     * @var RouteInterface|null
+     */
+    protected $xhrRoute;
 
     /**
      * @param array $config
@@ -107,20 +108,6 @@ class Partial implements PartialInterface
         if (!is_null($container)) {
             $this->setContainer($container);
         }
-        if (!self::$instance instanceof static) {
-            self::$instance = $this;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function instance(): PartialInterface
-    {
-        if (self::$instance instanceof self) {
-            return self::$instance;
-        }
-        throw new RuntimeException(sprintf('Unavailable %s instance', __CLASS__));
     }
 
     /**
@@ -139,10 +126,12 @@ class Partial implements PartialInterface
         if (!$this->isBooted()) {
             //events()->trigger('partial.booting', [$this]);
 
-            /*$this->xhrRoute = Router::xhr(
-                md5('partial') . '/{partial}/{controller}',
-                [$this, 'xhrResponseDispatcher']
-            );*/
+            if ($router = $this->getRouter()) {
+                $this->xhrRoute = $router->xhr(
+                    md5('partial') . '/api/{partial}/{controller}',
+                    [$this, 'xhrResponseDispatcher']
+                );
+            }
 
             //$this->registerDefaultDrivers();
 
@@ -157,14 +146,14 @@ class Partial implements PartialInterface
      */
     public function get(string $alias, $idOrParams = null, ?array $params = []): ?PartialDriverInterface
     {
-        if (is_array($idOrParams)) {
-            $params = $idOrParams;
+        if(is_array($idOrParams)) {
+            $params = (array)$idOrParams;
             $id = null;
         } else {
             $id = $idOrParams;
         }
 
-        if ($id && isset($this->drivers[$alias][$id])) {
+        if ($id !== null && isset($this->drivers[$alias][$id])) {
             return $this->drivers[$alias][$id];
         }
 
@@ -215,11 +204,25 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function getXhrRouteUrl(string $partial, ?string $controller = null, array $params = []): string
+    public function getRouter(): ?RouterInterface
     {
-        $controller = $controller ?? 'xhrResponse';
+        if (($this->router === null) && $this->containerHas(RouterInterface::class)) {
+            $this->router = $this->containerGet(RouterInterface::class);
+        }
+        return $this->router;
+    }
 
-        return $this->xhrRoute->getUrl(array_merge($params, compact('partial', 'controller')));
+    /**
+     * @inheritDoc
+     */
+    public function getXhrRouteUrl(string $partial, ?string $controller = null, array $params = []): ?string
+    {
+        if ($this->xhrRoute instanceof RouteInterface && ($router = $this->getRouter())) {
+            $controller = $controller ?? 'xhrResponse';
+
+            return $router->getRouteUrl($this->xhrRoute, array_merge($params, compact('partial', 'controller')));
+        }
+        return null;
     }
 
     /**
@@ -246,6 +249,16 @@ class Partial implements PartialInterface
         foreach ($this->defaultDrivers as $alias => $driverDefinition) {
             $this->register($alias, $driverDefinition);
         }
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRouter(RouterInterface $router): PartialInterface
+    {
+        $this->router = $router;
+
         return $this;
     }
 
