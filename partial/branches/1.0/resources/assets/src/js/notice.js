@@ -1,7 +1,7 @@
 'use strict';
 
 import jQuery from 'jquery';
-import '../../../observer/js/scripts';
+import './jquery-partial.observer';
 
 jQuery(function ($) {
   $(document).on('click', '[data-control="notice"] [data-toggle="notice.dismiss"]', function (e) {
@@ -21,7 +21,7 @@ jQuery(function ($) {
     }
   });
 
-  $.tify.observe('[data-control="notice"]', function (i, target) {
+  $.partial.observe('[data-control="notice"]', function (i, target) {
     let $el = $(target),
         time = parseInt($el.data('timeout')) || 0;
 

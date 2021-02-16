@@ -32,14 +32,17 @@ class SpinnerDriver extends PartialDriver implements SpinnerDriverInterface
      */
     public function defaultParams(): array
     {
-        return array_merge(parent::defaultParams(), [
-            /**
-             * @var string $spinner Choix de l'indicateur de préchargement. 'rotating-plane|fading-circle|folding-cube|
-             * double-bounce|wave|wandering-cubes|spinner-pulse|chasing-dots|three-bounce|circle|cube-grid.
-             * @see http://tobiasahlin.com/spinkit/
-             */
-            'spinner' => 'spinner-pulse',
-        ]);
+        return array_merge(
+            parent::defaultParams(),
+            [
+                /**
+                 * @var string $spinner Choix de l'indicateur de préchargement. 'rotating-plane|fading-circle|folding-cube|
+                 * double-bounce|wave|wandering-cubes|spinner-pulse|chasing-dots|three-bounce|circle|cube-grid.
+                 * @see http://tobiasahlin.com/spinkit/
+                 */
+                'spinner' => 'spinner-pulse',
+            ]
+        );
     }
 
     /**
@@ -49,17 +52,16 @@ class SpinnerDriver extends PartialDriver implements SpinnerDriverInterface
     {
         parent::parseParams();
 
-        switch ($spinner = $this->get('spinner')) {
-            default :
-                $spinner_class = "sk-{$spinner}";
-                break;
-            case 'spinner-pulse':
-                $spinner_class = "sk-spinner sk-{$spinner}";
-                break;
+        if ($spinner = $this->get('spinner')) {
+            $spinner_class = "sk-{$spinner}";
+        } else {
+            $spinner_class = "sk-spinner sk-{$spinner}";
         }
 
-        $this->set('attrs.class', ($exists = $this->get('attrs.class'))
-            ? "{$exists} {$spinner_class}" : $spinner_class
+        $this->set(
+            'attrs.class',
+            ($exists = $this->get('attrs.class'))
+                ? "{$exists} {$spinner_class}" : $spinner_class
         );
         return $this;
     }

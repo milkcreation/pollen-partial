@@ -3,7 +3,7 @@
 import jQuery from 'jquery'
 import 'jquery-ui/ui/core'
 import 'jquery-ui/ui/widget'
-import '../../../observer/js/scripts'
+import './jquery-partial.observer'
 
 jQuery(function ($) {
   $.widget('tify.tifyBurgerButton', {
@@ -129,7 +129,7 @@ jQuery(function ($) {
   $(document).ready(function () {
     $('[data-control="burger-button"]').tifyBurgerButton()
 
-    $.tify.observe('[data-control="burger-button"]', function (i, target) {
+    $.partial.observe('[data-control="burger-button"]', function (i, target) {
       $(target).tifyBurgerButton()
     })
   })

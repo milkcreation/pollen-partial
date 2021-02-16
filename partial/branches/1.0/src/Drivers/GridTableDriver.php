@@ -7,7 +7,10 @@ namespace Pollen\Partial\Drivers;
 use Pollen\Partial\PartialDriver;
 use Pollen\Partial\PartialDriverInterface;
 
-class TableDriver extends PartialDriver implements TableDriverInterface
+/**
+ * @todo
+ */
+class GridTableDriver extends PartialDriver implements TableDriverInterface
 {
     /**
      * @inheritDoc

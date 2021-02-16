@@ -10,30 +10,32 @@ use InvalidArgumentException;
 use RuntimeException;
 use League\Route\Http\Exception\NotFoundException;
 use Psr\Container\ContainerInterface as Container;
-use Pollen\Partial\Drivers\AccordionDriver;
-use Pollen\Partial\Drivers\BreadcrumbDriver;
+use Pollen\Http\ResponseInterface;
+//use Pollen\Partial\Drivers\AccordionDriver;
+//use Pollen\Partial\Drivers\BreadcrumbDriver;
 use Pollen\Partial\Drivers\BurgerButtonDriver;
-use Pollen\Partial\Drivers\CookieNoticeDriver;
-use Pollen\Partial\Drivers\CurtainMenuDriver;
-use Pollen\Partial\Drivers\DropdownDriver;
-use Pollen\Partial\Drivers\DownloaderDriver;
-use Pollen\Partial\Drivers\FlashNoticeDriver;
+//use Pollen\Partial\Drivers\CookieNoticeDriver;
+//use Pollen\Partial\Drivers\CurtainMenuDriver;
+//use Pollen\Partial\Drivers\DropdownDriver;
+//use Pollen\Partial\Drivers\DownloaderDriver;
+//use Pollen\Partial\Drivers\FlashNoticeDriver;
+//use Pollen\Partial\Drivers\GridTableDriver;
 use Pollen\Partial\Drivers\HolderDriver;
-use Pollen\Partial\Drivers\ImageLightboxDriver;
-use Pollen\Partial\Drivers\MenuDriver;
-use Pollen\Partial\Drivers\ModalDriver;
+//use Pollen\Partial\Drivers\ImageLightboxDriver;
+//use Pollen\Partial\Drivers\MenuDriver;
+//use Pollen\Partial\Drivers\ModalDriver;
 use Pollen\Partial\Drivers\NoticeDriver;
-use Pollen\Partial\Drivers\PaginationDriver;
-use Pollen\Partial\Drivers\PdfViewerDriver;
+//use Pollen\Partial\Drivers\PaginationDriver;
+//use Pollen\Partial\Drivers\PdfViewerDriver;
 use Pollen\Partial\Drivers\ProgressDriver;
-use Pollen\Partial\Drivers\SidebarDriver;
-use Pollen\Partial\Drivers\SliderDriver;
+//use Pollen\Partial\Drivers\SidebarDriver;
+//use Pollen\Partial\Drivers\SliderDriver;
 use Pollen\Partial\Drivers\SpinnerDriver;
-use Pollen\Partial\Drivers\TabDriver;
-use Pollen\Partial\Drivers\TableDriver;
+//use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
 use Pollen\Routing\RouteInterface;
 use Pollen\Routing\RouterInterface;
+use Pollen\Support\Filesystem;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagTrait;
 use Pollen\Support\Concerns\ContainerAwareTrait;
@@ -49,27 +51,27 @@ class Partial implements PartialInterface
      * @var array
      */
     private $defaultDrivers = [
-        'accordion'      => AccordionDriver::class,
-        'breadcrumb'     => BreadcrumbDriver::class,
+        //'accordion'      => AccordionDriver::class,
+        //'breadcrumb'     => BreadcrumbDriver::class,
         'burger-button'  => BurgerButtonDriver::class,
-        'cookie-notice'  => CookieNoticeDriver::class,
-        'curtain-menu'   => CurtainMenuDriver::class,
-        'dropdown'       => DropdownDriver::class,
-        'downloader'     => DownloaderDriver::class,
-        'flash-notice'   => FlashNoticeDriver::class,
+        //'cookie-notice'  => CookieNoticeDriver::class,
+        //'curtain-menu'   => CurtainMenuDriver::class,
+        //'dropdown'       => DropdownDriver::class,
+        //'downloader'     => DownloaderDriver::class,
+        //'flash-notice'   => FlashNoticeDriver::class,
+        //'grid-table'          => GridTableDriver::class,
         'holder'         => HolderDriver::class,
-        'image-lightbox' => ImageLightboxDriver::class,
-        'menu'           => MenuDriver::class,
-        'modal'          => ModalDriver::class,
+        //'image-lightbox' => ImageLightboxDriver::class,
+        //'menu'           => MenuDriver::class,
+        //'modal'          => ModalDriver::class,
         'notice'         => NoticeDriver::class,
-        'pagination'     => PaginationDriver::class,
-        'pdf-viewer'     => PdfViewerDriver::class,
+        //'pagination'     => PaginationDriver::class,
+        //'pdf-viewer'     => PdfViewerDriver::class,
         'progress'       => ProgressDriver::class,
-        'sidebar'        => SidebarDriver::class,
-        'slider'         => SliderDriver::class,
+        //'sidebar'        => SidebarDriver::class,
+        //'slider'         => SliderDriver::class,
         'spinner'        => SpinnerDriver::class,
-        'tab'            => TabDriver::class,
-        'table'          => TableDriver::class,
+        //'tab'            => TabDriver::class,
         'tag'            => TagDriver::class,
     ];
 
@@ -84,6 +86,12 @@ class Partial implements PartialInterface
      * @var PartialDriverInterface[][]|Closure[][]|string[][]|array
      */
     protected $driverDefinitions = [];
+
+    /**
+     * Chemin vers le répertoire des ressources.
+     * @var string|null
+     */
+    protected $resourcesBaseDir;
 
     /**
      * Instance du gestionnaire de routage.
@@ -107,6 +115,10 @@ class Partial implements PartialInterface
 
         if (!is_null($container)) {
             $this->setContainer($container);
+        }
+
+        if ($this->config('boot_enabled', true)) {
+            $this->boot();
         }
     }
 
@@ -133,7 +145,7 @@ class Partial implements PartialInterface
                 );
             }
 
-            //$this->registerDefaultDrivers();
+            $this->registerDefaultDrivers();
 
             $this->setBooted();
             //events()->trigger('partial.booted', [$this]);
@@ -255,6 +267,32 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
+    public function resources(?string $path = null): string
+    {
+        if ($this->resourcesBaseDir === null) {
+            $this->resourcesBaseDir = Filesystem::normalizePath(dirname(__DIR__) . '/resources/');
+
+            if (!file_exists($this->resourcesBaseDir)) {
+                throw new RuntimeException('Partial ressources directory unreachable');
+            }
+        }
+
+        return is_null($path) ? $this->resourcesBaseDir : $this->resourcesBaseDir . Filesystem::normalizePath($path);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setResourcesBaseDir(string $resourceBaseDir): PartialInterface
+    {
+        $this->resourcesBaseDir = Filesystem::normalizePath($resourceBaseDir);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setRouter(RouterInterface $router): PartialInterface
     {
         $this->router = $router;
@@ -265,7 +303,7 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function xhrResponseDispatcher(string $partial, string $controller, ...$args): array
+    public function xhrResponseDispatcher(string $partial, string $controller, ...$args): ResponseInterface
     {
         try {
             $driver = $this->get($partial);
@@ -284,6 +322,9 @@ class Partial implements PartialInterface
                 );
             }
         }
-        return ['success' => false];
+
+        throw new NotFoundException(
+            sprintf('PartialDriver [%s] unreachable', $partial)
+        );
     }
 }

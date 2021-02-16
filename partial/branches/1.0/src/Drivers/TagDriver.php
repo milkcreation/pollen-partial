@@ -55,7 +55,7 @@ class TagDriver extends PartialDriver implements TagDriverInterface
      */
     public function render(): string
     {
-        if (in_array($this->get('tag'), $this->singleton)) {
+        if (in_array($this->get('tag'), $this->singleton, true)) {
             $this->set('singleton', true);
         }
         return parent::render();

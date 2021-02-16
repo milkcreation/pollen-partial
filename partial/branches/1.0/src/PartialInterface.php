@@ -6,6 +6,7 @@ namespace Pollen\Partial;
 
 use Closure;
 use League\Route\Http\Exception\NotFoundException;
+use Pollen\Http\ResponseInterface;
 use Pollen\Routing\RouterInterface;
 
 /**
@@ -77,6 +78,24 @@ interface PartialInterface
     public function registerDefaultDrivers(): PartialInterface;
 
     /**
+     * Chemin absolu vers une ressources (fichier|répertoire).
+     *
+     * @param string|null $path Chemin relatif vers la ressource.
+     *
+     * @return string
+     */
+    public function resources(?string $path = null): string;
+
+    /**
+     * Définition du chemin absolu vers le répertoire des ressources.
+     *
+     * @var string $resourceBaseDir
+     *
+     * @return static
+     */
+    public function setResourcesBaseDir(string $resourceBaseDir): PartialInterface;
+
+    /**
      * Définition de l'instance du gestionnaire de routage.
      *
      * @param RouterInterface $router
@@ -92,9 +111,9 @@ interface PartialInterface
      * @param string $controller Nom de qualification du controleur de traitement de la requête.
      * @param mixed ...$args Liste des arguments passés au controleur
      *
-     * @return array
+     * @return ResponseInterface
      *
      * @throws NotFoundException
      */
-    public function xhrResponseDispatcher(string $partial, string $controller, ...$args): array;
+    public function xhrResponseDispatcher(string $partial, string $controller, ...$args): ResponseInterface;
 }

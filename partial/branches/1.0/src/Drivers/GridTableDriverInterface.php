@@ -6,6 +6,6 @@ namespace Pollen\Partial\Drivers;
 
 use Pollen\Partial\PartialDriverInterface;
 
-interface TableDriverInterface extends PartialDriverInterface
+interface GridTableDriverInterface extends PartialDriverInterface
 {
 }
