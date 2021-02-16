@@ -25,7 +25,7 @@ class NoticeDriver extends PartialDriver implements NoticeDriverInterface
              */
             'dismiss' => false,
             /**
-             * @var int $timeout Délai d'expiration d'affichage du message. Exprimé en secondes.
+             * @var int $timeout Délai d'expiration d'affichage du message. Exprimé en millisecondes.
              */
             'timeout' => 0,
             /**
