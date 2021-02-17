@@ -13,6 +13,7 @@ use Pollen\Partial\Drivers\CurtainMenuDriver;
 use Pollen\Partial\Drivers\DropdownDriver;
 use Pollen\Partial\Drivers\DownloaderDriver;
 use Pollen\Partial\Drivers\FlashNoticeDriver;
+use Pollen\Partial\Drivers\GridTableDriver;
 use Pollen\Partial\Drivers\HolderDriver;
 use Pollen\Partial\Drivers\ImageLightboxDriver;
 use Pollen\Partial\Drivers\MenuDriver;
@@ -25,7 +26,6 @@ use Pollen\Partial\Drivers\SidebarDriver;
 use Pollen\Partial\Drivers\SliderDriver;
 use Pollen\Partial\Drivers\SpinnerDriver;
 use Pollen\Partial\Drivers\TabDriver;
-use Pollen\Partial\Drivers\TableDriver;
 use Pollen\Partial\Drivers\TagDriver;
 
 class PartialServiceProvider extends BaseServiceProvider
@@ -46,6 +46,7 @@ class PartialServiceProvider extends BaseServiceProvider
         DropdownDriver::class,
         FlashNoticeDriver::class,
         HolderDriver::class,
+        GridTableDriver::class,
         ImageLightboxDriver::class,
         MenuDriver::class,
         ModalDriver::class,
@@ -57,7 +58,6 @@ class PartialServiceProvider extends BaseServiceProvider
         SliderDriver::class,
         SpinnerDriver::class,
         TabDriver::class,
-        TableDriver::class,
         TagDriver::class,
     ];
 
@@ -132,6 +132,12 @@ class PartialServiceProvider extends BaseServiceProvider
             }
         );
         $this->getContainer()->add(
+            GridTableDriver::class,
+            function () {
+                return new GridTableDriver($this->getContainer()->get(PartialInterface::class));
+            }
+        );
+        $this->getContainer()->add(
             HolderDriver::class,
             function () {
                 return new HolderDriver($this->getContainer()->get(PartialInterface::class));
@@ -203,12 +209,7 @@ class PartialServiceProvider extends BaseServiceProvider
                 return new TabDriver($this->getContainer()->get(PartialInterface::class));
             }
         );
-        $this->getContainer()->add(
-            TableDriver::class,
-            function () {
-                return new TableDriver($this->getContainer()->get(PartialInterface::class));
-            }
-        );
+
         $this->getContainer()->add(
             TagDriver::class,
             function () {
