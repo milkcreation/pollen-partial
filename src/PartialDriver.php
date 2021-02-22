@@ -7,6 +7,10 @@ namespace Pollen\Partial;
 use Closure;
 use BadMethodCallException;
 use InvalidArgumentException;
+use Pollen\Http\JsonResponse;
+use Pollen\Http\JsonResponseInterface;
+use Pollen\Http\Request;
+use Pollen\Http\RequestInterface;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ParamsBagTrait;
 use Pollen\Support\HtmlAttrs;
@@ -29,7 +33,7 @@ abstract class PartialDriver implements PartialDriverInterface
 
     /**
      * Instance du gestionnaire.
-     * @var PartialInterface
+     * @var PartialManagerInterface
      */
     private $partialManager;
 
@@ -53,15 +57,21 @@ abstract class PartialDriver implements PartialDriverInterface
     protected $id = '';
 
     /**
+     * Instance de la requête HTTP associée.
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * Instance du moteur de gabarits d'affichage.
      * @var PartialViewEngineInterface
      */
     protected $viewEngine;
 
     /**
-     * @param PartialInterface $partialManager
+     * @param PartialManagerInterface $partialManager
      */
-    public function __construct(PartialInterface $partialManager)
+    public function __construct(PartialManagerInterface $partialManager)
     {
         $this->partialManager = $partialManager;
     }
@@ -160,15 +170,15 @@ abstract class PartialDriver implements PartialDriverInterface
             static::$defaults,
             [
                 /**
-                 * @var array $attrs Attributs HTML du champ.
+                 * @var array $attrs Attributs HTML du conteneur.
                  */
                 'attrs'  => [],
                 /**
-                 * @var string $after Contenu placé après le champ.
+                 * @var string $after Contenu placé après le conteneur.
                  */
                 'after'  => '',
                 /**
-                 * @var string $before Contenu placé avant le champ.
+                 * @var string $before Contenu placé avant le conteneur.
                  */
                 'before' => '',
                 /**
@@ -213,6 +223,20 @@ abstract class PartialDriver implements PartialDriverInterface
     public function getIndex(): int
     {
         return $this->index;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRequest(): RequestInterface
+    {
+        if (is_null($this->request)) {
+            $this->request = $this->partialManager()->containerHas(RequestInterface::class)
+                ? $this->partialManager()->containerGet(RequestInterface::class)
+                : Request::createFromGlobals();
+        }
+
+        return $this->request;
     }
 
     /**
@@ -265,7 +289,7 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function partialManager(): PartialInterface
+    public function partialManager(): PartialManagerInterface
     {
         return $this->partialManager;
     }
@@ -312,6 +336,16 @@ abstract class PartialDriver implements PartialDriverInterface
     public function setIndex(int $index): PartialDriverInterface
     {
         $this->index = $index;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRequest(RequestInterface $request): PartialDriverInterface
+    {
+        $this->request = $request;
 
         return $this;
     }
@@ -399,10 +433,10 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function xhrResponse(...$args): array
+    public function xhrResponse(...$args): JsonResponseInterface
     {
-        return [
+        return new JsonResponse([
             'success' => true,
-        ];
+        ]);
     }
 }

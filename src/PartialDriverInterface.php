@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\Partial;
 
+use Pollen\Http\JsonResponseInterface;
+use Pollen\Http\RequestInterface;
+
 /**
  * @mixin \Pollen\Support\Concerns\ParamsBagTrait
  * @mixin \Pollen\Support\ParamsBag
@@ -79,7 +82,7 @@ interface PartialDriverInterface
     public function getAlias(): string;
 
     /**
-     * Récupération du prefixe de qualification de la classe associée.
+     * Récupération du préfixe de qualification de la classe associée.
      *
      * @return string
      */
@@ -98,6 +101,13 @@ interface PartialDriverInterface
      * @return int
      */
     public function getIndex(): int;
+
+    /**
+     * Récupération de l'instance de la requête HTTP associée.
+     *
+     * @return RequestInterface
+     */
+    public function getRequest(): RequestInterface;
 
     /**
      * Récupération de l'url de traitement des requêtes XHR.
@@ -125,9 +135,9 @@ interface PartialDriverInterface
     /**
      * Récupération du gestionnaire.
      *
-     * @return PartialInterface
+     * @return PartialManagerInterface
      */
-    public function partialManager(): PartialInterface;
+    public function partialManager(): PartialManagerInterface;
 
     /**
      * Affichage.
@@ -173,6 +183,15 @@ interface PartialDriverInterface
     public function setIndex(int $index): PartialDriverInterface;
 
     /**
+     * Définition de l'instance de la requête HTTP associée.
+     *
+     * @param RequestInterface $request
+     *
+     * @return static
+     */
+    public function setRequest(RequestInterface $request): PartialDriverInterface;
+
+    /**
      * Définition de l'instance du moteur d'affichage.
      *
      * @param PartialViewEngineInterface $viewEngine
@@ -203,7 +222,7 @@ interface PartialDriverInterface
      *
      * @param array ...$args
      *
-     * @return array
+     * @return JsonResponseInterface
      */
-    public function xhrResponse(...$args): array;
+    public function xhrResponse(...$args): JsonResponseInterface;
 }
