@@ -14,7 +14,7 @@ use Pollen\Routing\RouterInterface;
  * @mixin \Pollen\Support\Concerns\ConfigBagTrait
  * @mixin \Pollen\Support\Concerns\ContainerAwareTrait
  */
-interface PartialInterface
+interface PartialManagerInterface
 {
     /**
      * Récupération de la liste des pilote déclarés.
@@ -28,7 +28,7 @@ interface PartialInterface
      *
      * @return static
      */
-    public function boot(): PartialInterface;
+    public function boot(): PartialManagerInterface;
 
     /**
      * Récupération d'une portion d'affichage déclarée.
@@ -68,14 +68,14 @@ interface PartialInterface
      *
      * @return static
      */
-    public function register(string $alias, $driverDefinition, ?Closure $callback = null): PartialInterface;
+    public function register(string $alias, $driverDefinition, ?Closure $callback = null): PartialManagerInterface;
 
     /**
      * Déclaration des instances de pilotes par défaut.
      *
      * @return static
      */
-    public function registerDefaultDrivers(): PartialInterface;
+    public function registerDefaultDrivers(): PartialManagerInterface;
 
     /**
      * Chemin absolu vers une ressources (fichier|répertoire).
@@ -93,16 +93,16 @@ interface PartialInterface
      *
      * @return static
      */
-    public function setResourcesBaseDir(string $resourceBaseDir): PartialInterface;
+    public function setResourcesBaseDir(string $resourceBaseDir): PartialManagerInterface;
 
     /**
      * Définition de l'instance du gestionnaire de routage.
      *
      * @param RouterInterface $router
      *
-     * @return PartialInterface
+     * @return static
      */
-    public function setRouter(RouterInterface $router): PartialInterface;
+    public function setRouter(RouterInterface $router): PartialManagerInterface;
 
     /**
      * Répartiteur de traitement d'une requête XHR.

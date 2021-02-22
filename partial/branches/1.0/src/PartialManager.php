@@ -9,7 +9,6 @@ use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use League\Route\Http\Exception\NotFoundException;
-use Psr\Container\ContainerInterface as Container;
 use Pollen\Http\ResponseInterface;
 //use Pollen\Partial\Drivers\AccordionDriver;
 //use Pollen\Partial\Drivers\BreadcrumbDriver;
@@ -39,8 +38,9 @@ use Pollen\Support\Filesystem;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagTrait;
 use Pollen\Support\Concerns\ContainerAwareTrait;
+use Psr\Container\ContainerInterface as Container;
 
-class Partial implements PartialInterface
+class PartialManager implements PartialManagerInterface
 {
     use BootableTrait;
     use ConfigBagTrait;
@@ -133,14 +133,14 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function boot(): PartialInterface
+    public function boot(): PartialManagerInterface
     {
         if (!$this->isBooted()) {
             //events()->trigger('partial.booting', [$this]);
 
             if ($router = $this->getRouter()) {
                 $this->xhrRoute = $router->xhr(
-                    md5('partial') . '/api/{partial}/{controller}',
+                    '/api/' . md5('partial') . '/{partial}/{controller}',
                     [$this, 'xhrResponseDispatcher']
                 );
             }
@@ -148,6 +148,7 @@ class Partial implements PartialInterface
             $this->registerDefaultDrivers();
 
             $this->setBooted();
+
             //events()->trigger('partial.booted', [$this]);
         }
         return $this;
@@ -240,7 +241,7 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function register(string $alias, $driverDefinition, ?Closure $callback = null): PartialInterface
+    public function register(string $alias, $driverDefinition, ?Closure $callback = null): PartialManagerInterface
     {
         if (isset($this->driverDefinitions[$alias])) {
             throw new RuntimeException(sprintf('Another PartialDriver with alias [%s] already registered', $alias));
@@ -256,7 +257,7 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function registerDefaultDrivers(): PartialInterface
+    public function registerDefaultDrivers(): PartialManagerInterface
     {
         foreach ($this->defaultDrivers as $alias => $driverDefinition) {
             $this->register($alias, $driverDefinition);
@@ -270,7 +271,7 @@ class Partial implements PartialInterface
     public function resources(?string $path = null): string
     {
         if ($this->resourcesBaseDir === null) {
-            $this->resourcesBaseDir = Filesystem::normalizePath(dirname(__DIR__) . '/resources/');
+            $this->resourcesBaseDir = Filesystem::normalizePath(__DIR__ . '/../resources/');
 
             if (!file_exists($this->resourcesBaseDir)) {
                 throw new RuntimeException('Partial ressources directory unreachable');
@@ -283,7 +284,7 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function setResourcesBaseDir(string $resourceBaseDir): PartialInterface
+    public function setResourcesBaseDir(string $resourceBaseDir): PartialManagerInterface
     {
         $this->resourcesBaseDir = Filesystem::normalizePath($resourceBaseDir);
 
@@ -293,7 +294,7 @@ class Partial implements PartialInterface
     /**
      * @inheritDoc
      */
-    public function setRouter(RouterInterface $router): PartialInterface
+    public function setRouter(RouterInterface $router): PartialManagerInterface
     {
         $this->router = $router;
 

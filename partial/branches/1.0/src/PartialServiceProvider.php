@@ -36,7 +36,7 @@ class PartialServiceProvider extends BaseServiceProvider
      * @var string[]
      */
     protected $provides = [
-        PartialInterface::class,
+        PartialManagerInterface::class,
         PartialViewEngineInterface::class,
         AccordionDriver::class,
         BreadcrumbDriver::class,
@@ -67,9 +67,9 @@ class PartialServiceProvider extends BaseServiceProvider
     public function register(): void
     {
         $this->getContainer()->share(
-            PartialInterface::class,
+            PartialManagerInterface::class,
             function () {
-                return new Partial([], $this->getContainer());
+                return new PartialManager([], $this->getContainer());
             }
         );
         $this->registerDrivers();
@@ -86,134 +86,134 @@ class PartialServiceProvider extends BaseServiceProvider
         $this->getContainer()->add(
             AccordionDriver::class,
             function () {
-                return new AccordionDriver($this->getContainer()->get(PartialInterface::class));
+                return new AccordionDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             BreadcrumbDriver::class,
             function () {
-                return new BreadcrumbDriver($this->getContainer()->get(PartialInterface::class));
+                return new BreadcrumbDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             BurgerButtonDriver::class,
             function () {
-                return new BurgerButtonDriver($this->getContainer()->get(PartialInterface::class));
+                return new BurgerButtonDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             CookieNoticeDriver::class,
             function () {
-                return new CookieNoticeDriver($this->getContainer()->get(PartialInterface::class));
+                return new CookieNoticeDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             CurtainMenuDriver::class,
             function () {
-                return new CurtainMenuDriver($this->getContainer()->get(PartialInterface::class));
+                return new CurtainMenuDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             DropdownDriver::class,
             function () {
-                return new DropdownDriver($this->getContainer()->get(PartialInterface::class));
+                return new DropdownDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             DownloaderDriver::class,
             function () {
-                return new DownloaderDriver($this->getContainer()->get(PartialInterface::class));
+                return new DownloaderDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             FlashNoticeDriver::class,
             function () {
-                return new FlashNoticeDriver($this->getContainer()->get(PartialInterface::class));
+                return new FlashNoticeDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             GridTableDriver::class,
             function () {
-                return new GridTableDriver($this->getContainer()->get(PartialInterface::class));
+                return new GridTableDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             HolderDriver::class,
             function () {
-                return new HolderDriver($this->getContainer()->get(PartialInterface::class));
+                return new HolderDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             ImageLightboxDriver::class,
             function () {
-                return new ImageLightboxDriver($this->getContainer()->get(PartialInterface::class));
+                return new ImageLightboxDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             MenuDriver::class,
             function () {
-                return new MenuDriver($this->getContainer()->get(PartialInterface::class));
+                return new MenuDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             ModalDriver::class,
             function () {
-                return new ModalDriver($this->getContainer()->get(PartialInterface::class));
+                return new ModalDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             NoticeDriver::class,
             function () {
-                return new NoticeDriver($this->getContainer()->get(PartialInterface::class));
+                return new NoticeDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             PaginationDriver::class,
             function () {
-                return new PaginationDriver($this->getContainer()->get(PartialInterface::class));
+                return new PaginationDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             PdfViewerDriver::class,
             function () {
-                return new PdfViewerDriver($this->getContainer()->get(PartialInterface::class));
+                return new PdfViewerDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             ProgressDriver::class,
             function () {
-                return new ProgressDriver($this->getContainer()->get(PartialInterface::class));
+                return new ProgressDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             SidebarDriver::class,
             function () {
-                return new SidebarDriver($this->getContainer()->get(PartialInterface::class));
+                return new SidebarDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             SliderDriver::class,
             function () {
-                return new SliderDriver($this->getContainer()->get(PartialInterface::class));
+                return new SliderDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             SpinnerDriver::class,
             function () {
-                return new SpinnerDriver($this->getContainer()->get(PartialInterface::class));
+                return new SpinnerDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
             TabDriver::class,
             function () {
-                return new TabDriver($this->getContainer()->get(PartialInterface::class));
+                return new TabDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
 
         $this->getContainer()->add(
             TagDriver::class,
             function () {
-                return new TagDriver($this->getContainer()->get(PartialInterface::class));
+                return new TagDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
     }

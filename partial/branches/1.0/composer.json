@@ -1,13 +1,13 @@
 {
   "name": "pollen-solutions/partial",
-  "description": "Pollen Partial Component - Web Interfaces collection.",
+  "description": "Pollen Partial Component - Collection of web user interfaces.",
   "homepage": "https://www.presstify.com/pollen-solutions/partial/",
   "keywords": [
     "pollen-solutions",
     "component",
     "partial"
   ],
-  "time": "2021-02-18",
+  "time": "2021-02-22",
   "license": "MIT",
   "authors": [
     {
