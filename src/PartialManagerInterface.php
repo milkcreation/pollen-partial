@@ -64,11 +64,11 @@ interface PartialManagerInterface
      *
      * @param string $alias
      * @param string|PartialDriverInterface|Closure $driverDefinition
-     * @param Closure|null $callback
+     * @param Closure|null $registerCallback
      *
      * @return static
      */
-    public function register(string $alias, $driverDefinition, ?Closure $callback = null): PartialManagerInterface;
+    public function register(string $alias, $driverDefinition, ?Closure $registerCallback = null): PartialManagerInterface;
 
     /**
      * Déclaration des instances de pilotes par défaut.
