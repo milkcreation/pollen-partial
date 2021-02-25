@@ -11,7 +11,7 @@ use Pollen\Routing\RouterInterface;
 
 /**
  * @mixin \Pollen\Support\Concerns\BootableTrait
- * @mixin \Pollen\Support\Concerns\ConfigBagTrait
+ * @mixin \Pollen\Support\Concerns\ConfigBagAwareTrait
  * @mixin \Pollen\Support\Concerns\ContainerAwareTrait
  */
 interface PartialManagerInterface

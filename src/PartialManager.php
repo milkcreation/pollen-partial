@@ -36,15 +36,21 @@ use Pollen\Routing\RouteInterface;
 use Pollen\Routing\RouterInterface;
 use Pollen\Support\Filesystem;
 use Pollen\Support\Concerns\BootableTrait;
-use Pollen\Support\Concerns\ConfigBagTrait;
+use Pollen\Support\Concerns\ConfigBagAwareTrait;
 use Pollen\Support\Concerns\ContainerAwareTrait;
 use Psr\Container\ContainerInterface as Container;
 
 class PartialManager implements PartialManagerInterface
 {
     use BootableTrait;
-    use ConfigBagTrait;
+    use ConfigBagAwareTrait;
     use ContainerAwareTrait;
+
+    /**
+     * Instance principale.
+     * @var static|null
+     */
+    private static $instance;
 
     /**
      * Définition des pilotes par défaut.
@@ -120,6 +126,23 @@ class PartialManager implements PartialManagerInterface
         if ($this->config('boot_enabled', true)) {
             $this->boot();
         }
+
+        if (!self::$instance instanceof static) {
+            self::$instance = $this;
+        }
+    }
+
+    /**
+     * Récupération de l'instance principale.
+     *
+     * @return static
+     */
+    public static function getInstance(): PartialManagerInterface
+    {
+        if (self::$instance instanceof self) {
+            return self::$instance;
+        }
+        throw new RuntimeException(sprintf('Unavailable [%s] instance', __CLASS__));
     }
 
     /**
@@ -271,7 +294,7 @@ class PartialManager implements PartialManagerInterface
     public function resources(?string $path = null): string
     {
         if ($this->resourcesBaseDir === null) {
-            $this->resourcesBaseDir = Filesystem::normalizePath(__DIR__ . '/../resources/');
+            $this->resourcesBaseDir = Filesystem::normalizePath(realpath(dirname(__DIR__) . '/resources/'));
 
             if (!file_exists($this->resourcesBaseDir)) {
                 throw new RuntimeException('Partial ressources directory unreachable');
