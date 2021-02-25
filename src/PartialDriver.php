@@ -12,6 +12,7 @@ use Pollen\Http\JsonResponseInterface;
 use Pollen\Http\Request;
 use Pollen\Http\RequestInterface;
 use Pollen\Support\Concerns\BootableTrait;
+use Pollen\Support\Concerns\HttpRequestAwareTrait;
 use Pollen\Support\Concerns\ParamsBagAwareTrait;
 use Pollen\Support\HtmlAttrs;
 use Pollen\Support\Str;
@@ -23,6 +24,7 @@ use Throwable;
 abstract class PartialDriver implements PartialDriverInterface
 {
     use BootableTrait;
+    use HttpRequestAwareTrait;
     use ParamsBagAwareTrait;
 
     /**
