@@ -35,7 +35,7 @@ class CurtainMenuDriver extends PartialDriver implements CurtainMenuDriverInterf
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -50,8 +50,6 @@ class CurtainMenuDriver extends PartialDriver implements CurtainMenuDriverInterf
         $this->set('attrs.data-options', []);
 
         $this->parseItems();
-
-        return $this;
     }
 
     /**

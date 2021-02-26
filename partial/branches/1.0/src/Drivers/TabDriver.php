@@ -104,7 +104,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -117,8 +117,6 @@ class TabDriver extends PartialDriver implements TabDriverInterface
                 $this->addItem($item);
             }
         }
-
-        return $this;
     }
 
     /**

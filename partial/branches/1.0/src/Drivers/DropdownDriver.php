@@ -27,7 +27,7 @@ class DropdownDriver extends PartialDriver implements DropdownDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -56,8 +56,6 @@ class DropdownDriver extends PartialDriver implements DropdownDriverInterface
             'open'    => $this->get('open'),
             'trigger' => $this->get('trigger'),
         ]);
-
-        return $this;
     }
 
     /**

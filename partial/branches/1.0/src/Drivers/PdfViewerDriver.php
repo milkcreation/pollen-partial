@@ -57,7 +57,7 @@ class PdfViewerDriver extends PartialDriver implements PdfViewerDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -86,13 +86,12 @@ class PdfViewerDriver extends PartialDriver implements PdfViewerDriverInterface
             'attrs.data-options' => [
                 'classes' => $this->get('classes'),
                 'content' => $this->get('content'),
-                'defer'   => !!$this->get('defer'),
-                'spinner' => !!$this->get('spinner'),
+                'defer'   => (bool)$this->get('defer'),
+                'spinner' => (bool)$this->get('spinner'),
                 'nav'     => $this->get('nav'),
                 'src'     => $this->get('src'),
             ],
         ]);
-        return $this;
     }
 
     /**

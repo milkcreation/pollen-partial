@@ -12,20 +12,17 @@ use Pollen\Http\JsonResponseInterface;
 use Pollen\Http\Request;
 use Pollen\Http\RequestInterface;
 use Pollen\Support\Concerns\BootableTrait;
-use Pollen\Support\Concerns\HttpRequestAwareTrait;
-use Pollen\Support\Concerns\ParamsBagAwareTrait;
+use Pollen\Support\Concerns\ParamsBagDelegateTrait;
+use Pollen\Support\Proxy\HttpRequestProxy;
 use Pollen\Support\HtmlAttrs;
 use Pollen\Support\Str;
 use Throwable;
 
-/**
- * @mixin \Pollen\Support\ParamsBag
- */
 abstract class PartialDriver implements PartialDriverInterface
 {
     use BootableTrait;
-    use HttpRequestAwareTrait;
-    use ParamsBagAwareTrait;
+    use HttpRequestProxy;
+    use ParamsBagDelegateTrait;
 
     /**
      * Indice de l'instance dans le gestionnaire.
@@ -76,33 +73,6 @@ abstract class PartialDriver implements PartialDriverInterface
     public function __construct(PartialManagerInterface $partialManager)
     {
         $this->partialManager = $partialManager;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __get(string $key)
-    {
-        return $this->params($key);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __call(string $method, array $arguments)
-    {
-        try {
-            return $this->params()->{$method}(...$arguments);
-        } catch (Throwable $e) {
-            throw new BadMethodCallException(
-                sprintf(
-                    'PartialDriver [%s] method call [%s] throws an exception: %s',
-                    $this->getAlias(),
-                    $method,
-                    $e->getMessage()
-                )
-            );
-        }
     }
 
     /**
@@ -252,9 +222,9 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
-        return $this->parseAttrId()->parseAttrClass();
+        $this->parseAttrId()->parseAttrClass();
     }
 
     /**

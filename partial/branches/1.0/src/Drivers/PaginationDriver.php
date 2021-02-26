@@ -99,7 +99,7 @@ class PaginationDriver extends PartialDriver implements PaginationDriverInterfac
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -114,8 +114,6 @@ class PaginationDriver extends PartialDriver implements PaginationDriverInterfac
         }
 
         $this->view()->setFactory(PaginationView::class);
-
-        return $this;
     }
 
     /**

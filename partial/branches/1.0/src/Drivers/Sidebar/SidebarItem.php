@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers\Sidebar;
 
 use tiFy\Support\Callback;
-use tiFy\Support\ParamsBag;
+use Pollen\Support\ParamsBag;
 
 class SidebarItem extends ParamsBag
 {
@@ -22,7 +22,8 @@ class SidebarItem extends ParamsBag
     public function __construct(string $name, array $attrs = [])
     {
         $this->name = $name;
-        $this->set($attrs)->parse();
+        $this->set($attrs);
+        $this->parse();
     }
 
     /**
@@ -53,7 +54,7 @@ class SidebarItem extends ParamsBag
     /**
      * @inheritDoc
      */
-    public function parse($attrs = []): self
+    public function parse($attrs = []): void
     {
         parent::parse();
 
@@ -63,7 +64,5 @@ class SidebarItem extends ParamsBag
                 sprintf("Sidebar-item Sidebar-item--{$this->name} %s", $this->get('attrs.class') ?: '')
             )
         );
-
-        return $this;
     }
 }

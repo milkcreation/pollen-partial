@@ -38,7 +38,7 @@ class NoticeDriver extends PartialDriver implements NoticeDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -65,8 +65,6 @@ class NoticeDriver extends PartialDriver implements NoticeDriverInterface
         } else {
             $this->set('dismiss', '');
         }
-
-        return $this;
     }
 
     /**

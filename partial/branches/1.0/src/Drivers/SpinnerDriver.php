@@ -48,7 +48,7 @@ class SpinnerDriver extends PartialDriver implements SpinnerDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -63,7 +63,6 @@ class SpinnerDriver extends PartialDriver implements SpinnerDriverInterface
             ($exists = $this->get('attrs.class'))
                 ? "{$exists} {$spinner_class}" : $spinner_class
         );
-        return $this;
     }
 
     /**

@@ -27,7 +27,7 @@ class ProgressDriver extends PartialDriver implements ProgressDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -76,8 +76,6 @@ class ProgressDriver extends PartialDriver implements ProgressDriverInterface
                 'value' => $this->get('value', 0),
             ],
         ]);
-
-        return $this;
     }
 
     /**

@@ -80,12 +80,13 @@ class ModalDriver extends PartialDriver implements ModalDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         $this->set([
            'attrs.data-id'      => $this->get('attrs.id', $this->getId())
         ]);
-        return parent::parseParams();
+
+        parent::parseParams();
     }
 
     /**

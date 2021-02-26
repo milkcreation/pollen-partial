@@ -37,7 +37,7 @@ class SliderDriver extends PartialDriver implements SliderDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -50,13 +50,12 @@ class SliderDriver extends PartialDriver implements SliderDriverInterface
                 $item = "<img src=\"{$item}\" alt=\"\"/>";
             }
         }
+
         $this->set([
             'items'              => $items,
             'attrs.data-control' => 'slider',
             'attrs.data-slick'   => htmlentities(json_encode($this->get('options', []))),
         ]);
-
-        return $this;
     }
 
     /**

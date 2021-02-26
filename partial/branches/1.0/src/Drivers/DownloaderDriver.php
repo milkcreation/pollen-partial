@@ -79,7 +79,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -110,8 +110,6 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
                 'trigger.attrs.data-control' => 'downloader',
             ]
         );
-
-        return $this;
     }
 
     /**
