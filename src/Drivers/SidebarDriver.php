@@ -91,7 +91,7 @@ class SidebarDriver extends PartialDriver implements SidebarDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -157,8 +157,6 @@ class SidebarDriver extends PartialDriver implements SidebarDriverInterface
 
             $this->set('toggle', $this->toggle($attrs));
         }
-
-        return $this;
     }
 
     /**

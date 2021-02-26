@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Dropdown;
 
-use tiFy\Support\ParamsBag;
+use Pollen\Support\ParamsBag;
 
 class DropdownItem extends ParamsBag implements DropdownItemInterface
 {
@@ -26,7 +26,8 @@ class DropdownItem extends ParamsBag implements DropdownItemInterface
             $attrs = ['content' => $attrs];
         }
 
-        $this->set($attrs)->parse();
+        $this->set($attrs);
+        $this->parse();
     }
 
     /**

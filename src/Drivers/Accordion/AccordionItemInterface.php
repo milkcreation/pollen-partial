@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Accordion;
 
-/**
- * @mixin \Pollen\Support\ParamsBag
- */
-interface AccordionItemInterface
+use Pollen\Support\ParamsBagInterface;
+
+interface AccordionItemInterface extends ParamsBagInterface
 {
     /**
      * Résolution de sortie de la classe sous forme d'une chaîne de caractères.

@@ -56,13 +56,11 @@ class GridTableDriver extends PartialDriver implements TableDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
         $this->set('count', count($this->get('columns', [])));
-
-        return $this;
     }
 
     /**

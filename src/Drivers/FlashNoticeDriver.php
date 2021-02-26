@@ -52,7 +52,7 @@ class FlashNoticeDriver extends PartialDriver implements FlashNoticeDriverInterf
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -63,8 +63,6 @@ class FlashNoticeDriver extends PartialDriver implements FlashNoticeDriverInterf
             }
             $this->set(compact('types'));
         }
-
-        return $this;
     }
 
     /**

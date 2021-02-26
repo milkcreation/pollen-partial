@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\CurtainMenu;
 
+use Pollen\Support\ParamsBagInterface;
 
-/**
- * @mixin \Pollen\Support\ParamsBag
- */
-interface CurtainMenuItemInterface
+interface CurtainMenuItemInterface extends ParamsBagInterface
 {
     /**
      * Vérification d'existance d'éléments enfants associés.

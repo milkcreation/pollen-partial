@@ -93,7 +93,7 @@ class ImageLightboxDriver extends PartialDriver implements ImageLightboxDriverIn
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -101,8 +101,6 @@ class ImageLightboxDriver extends PartialDriver implements ImageLightboxDriverIn
 
         $this->set('attrs.data-control', 'image-lightbox');
         $this->set('attrs.data-options', $this->pull('options', []));
-
-        return $this;
     }
 
     /**

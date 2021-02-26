@@ -8,13 +8,14 @@ use Closure;
 use League\Route\Http\Exception\NotFoundException;
 use Pollen\Http\ResponseInterface;
 use Pollen\Routing\RouterInterface;
+use Pollen\Support\Concerns\BootableTraitInterface;
+use Pollen\Support\Concerns\ConfigBagAwareTraitInterface;
+use Pollen\Support\Proxy\ContainerProxyInterface;
 
 /**
- * @mixin \Pollen\Support\Concerns\BootableTrait
- * @mixin \Pollen\Support\Concerns\ConfigBagAwareTrait
- * @mixin \Pollen\Support\Concerns\ContainerAwareTrait
+
  */
-interface PartialManagerInterface
+interface PartialManagerInterface extends BootableTraitInterface, ConfigBagAwareTraitInterface, ContainerProxyInterface
 {
     /**
      * Récupération de la liste des pilote déclarés.

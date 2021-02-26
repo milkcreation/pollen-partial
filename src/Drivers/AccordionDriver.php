@@ -48,7 +48,7 @@ class AccordionDriver extends PartialDriver implements AccordionDriverInterface
     /**
      * @inheritDoc
      */
-    public function parseParams(): PartialDriverInterface
+    public function parseParams(): void
     {
         parent::parseParams();
 
@@ -74,8 +74,6 @@ class AccordionDriver extends PartialDriver implements AccordionDriverInterface
         $parent = !is_null($this->get('parent', null)) ? (string) $this->get('parent', null) : null;
 
         $this->set('items', $items->setPartial($this)->setParent($parent)->build());
-
-        return $this;
     }
 
     /**
