@@ -7,15 +7,16 @@ namespace Pollen\Partial;
 use Closure;
 use League\Route\Http\Exception\NotFoundException;
 use Pollen\Http\ResponseInterface;
-use Pollen\Routing\RouterInterface;
 use Pollen\Support\Concerns\BootableTraitInterface;
 use Pollen\Support\Concerns\ConfigBagAwareTraitInterface;
 use Pollen\Support\Proxy\ContainerProxyInterface;
+use Pollen\Support\Proxy\RouterProxyInterface;
 
-/**
-
- */
-interface PartialManagerInterface extends BootableTraitInterface, ConfigBagAwareTraitInterface, ContainerProxyInterface
+interface PartialManagerInterface extends
+    BootableTraitInterface,
+    ConfigBagAwareTraitInterface,
+    ContainerProxyInterface,
+    RouterProxyInterface
 {
     /**
      * Récupération de la liste des pilote déclarés.
@@ -41,13 +42,6 @@ interface PartialManagerInterface extends BootableTraitInterface, ConfigBagAware
      * @return PartialDriverInterface|null
      */
     public function get(string $alias, $idOrParams = null, ?array $params = []): ?PartialDriverInterface;
-
-    /**
-     * Récupération de l'instance du gestionnaire de routage.
-     *
-     * @return RouterInterface|null
-     */
-    public function getRouter(): ?RouterInterface;
 
     /**
      * Récupération de l'url de traitement des requêtes XHR.
@@ -95,15 +89,6 @@ interface PartialManagerInterface extends BootableTraitInterface, ConfigBagAware
      * @return static
      */
     public function setResourcesBaseDir(string $resourceBaseDir): PartialManagerInterface;
-
-    /**
-     * Définition de l'instance du gestionnaire de routage.
-     *
-     * @param RouterInterface $router
-     *
-     * @return static
-     */
-    public function setRouter(RouterInterface $router): PartialManagerInterface;
 
     /**
      * Répartiteur de traitement d'une requête XHR.

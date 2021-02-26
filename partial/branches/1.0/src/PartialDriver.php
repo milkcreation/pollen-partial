@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pollen\Partial;
 
 use Closure;
-use BadMethodCallException;
 use InvalidArgumentException;
 use Pollen\Http\JsonResponse;
 use Pollen\Http\JsonResponseInterface;
@@ -16,7 +15,6 @@ use Pollen\Support\Concerns\ParamsBagDelegateTrait;
 use Pollen\Support\Proxy\HttpRequestProxy;
 use Pollen\Support\HtmlAttrs;
 use Pollen\Support\Str;
-use Throwable;
 
 abstract class PartialDriver implements PartialDriverInterface
 {
@@ -342,24 +340,27 @@ abstract class PartialDriver implements PartialDriverInterface
             $overrideDir = null;
             $default = $this->partialManager()->config('default.driver.viewer', []);
 
-            if (isset($default['directory'])) {
+            $directory = $this->get('viewer.directory');
+            if ($directory && !file_exists($directory)) {
+                $directory = null;
+            }
+
+            $overrideDir = $this->get('viewer.override_dir');
+            if ($overrideDir && !file_exists($overrideDir)) {
+                $overrideDir = null;
+            }
+
+            if ($directory === null && isset($default['directory'])) {
                 $default['directory'] = rtrim($default['directory'], '/') . '/' . $this->getAlias();
                 if (file_exists($default['directory'])) {
                     $directory = $default['directory'];
                 }
             }
 
-            if (isset($default['override_dir'])) {
+            if ($overrideDir === null && isset($default['override_dir'])) {
                 $default['override_dir'] = rtrim($default['override_dir'], '/') . '/' . $this->getAlias();
                 if (file_exists($default['override_dir'])) {
                     $overrideDir = $default['override_dir'];
-                }
-            }
-
-            if ($directory === null) {
-                $directory = $this->get('viewer.directory', null);
-                if ($directory && !file_exists($directory)) {
-                    $directory = null;
                 }
             }
 
@@ -369,13 +370,6 @@ abstract class PartialDriver implements PartialDriverInterface
                     throw new InvalidArgumentException(
                         sprintf('Partial [%s] must have an accessible view directory', $this->getAlias())
                     );
-                }
-            }
-
-            if ($overrideDir === null) {
-                $overrideDir = $this->get('viewer.override_dir', null);
-                if ($overrideDir && !file_exists($overrideDir)) {
-                    $overrideDir = null;
                 }
             }
 

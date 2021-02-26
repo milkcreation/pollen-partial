@@ -7,6 +7,7 @@ namespace Pollen\Partial;
 use Closure;
 use Exception;
 use InvalidArgumentException;
+use Pollen\Support\Proxy\RouterProxy;
 use RuntimeException;
 use League\Route\Http\Exception\NotFoundException;
 use Pollen\Http\ResponseInterface;
@@ -33,7 +34,6 @@ use Pollen\Partial\Drivers\SpinnerDriver;
 //use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
 use Pollen\Routing\RouteInterface;
-use Pollen\Routing\RouterInterface;
 use Pollen\Support\Filesystem;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagAwareTrait;
@@ -45,6 +45,7 @@ class PartialManager implements PartialManagerInterface
     use BootableTrait;
     use ConfigBagAwareTrait;
     use ContainerProxy;
+    use RouterProxy;
 
     /**
      * Instance principale.
@@ -98,12 +99,6 @@ class PartialManager implements PartialManagerInterface
      * @var string|null
      */
     protected $resourcesBaseDir;
-
-    /**
-     * Instance du gestionnaire de routage.
-     * @var RouterInterface|null
-     */
-    protected $router;
 
     /**
      * Route de traitement des requêtes XHR.
@@ -161,7 +156,7 @@ class PartialManager implements PartialManagerInterface
         if (!$this->isBooted()) {
             //events()->trigger('partial.booting', [$this]);
 
-            if ($router = $this->getRouter()) {
+            if ($router = $this->router()) {
                 $this->xhrRoute = $router->xhr(
                     '/api/' . md5('partial') . '/{partial}/{controller}',
                     [$this, 'xhrResponseDispatcher']
@@ -240,20 +235,9 @@ class PartialManager implements PartialManagerInterface
     /**
      * @inheritDoc
      */
-    public function getRouter(): ?RouterInterface
-    {
-        if (($this->router === null) && $this->containerHas(RouterInterface::class)) {
-            $this->router = $this->containerGet(RouterInterface::class);
-        }
-        return $this->router;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getXhrRouteUrl(string $partial, ?string $controller = null, array $params = []): ?string
     {
-        if ($this->xhrRoute instanceof RouteInterface && ($router = $this->getRouter())) {
+        if ($this->xhrRoute instanceof RouteInterface && ($router = $this->router())) {
             $controller = $controller ?? 'xhrResponse';
 
             return $router->getRouteUrl($this->xhrRoute, array_merge($params, compact('partial', 'controller')));
@@ -310,16 +294,6 @@ class PartialManager implements PartialManagerInterface
     public function setResourcesBaseDir(string $resourceBaseDir): PartialManagerInterface
     {
         $this->resourcesBaseDir = Filesystem::normalizePath($resourceBaseDir);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRouter(RouterInterface $router): PartialManagerInterface
-    {
-        $this->router = $router;
 
         return $this;
     }
