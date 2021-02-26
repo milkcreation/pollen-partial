@@ -12,7 +12,7 @@ interface PartialViewEngineInterface extends ViewEngineInterface
     /**
      * {@inheritDoc}
      *
-     * @return PartialViewTemplate
+     * @return PartialViewTemplateInterface
      */
     public function make($name): ViewTemplateInterface;
 }

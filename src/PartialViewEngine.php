@@ -26,7 +26,7 @@ class PartialViewEngine extends ViewEngine implements PartialViewEngineInterface
     /**
      * {@inheritDoc}
      *
-     * @return PartialViewTemplate
+     * @return PartialViewTemplateInterface
      */
     public function make($name): ViewTemplateInterface
     {
