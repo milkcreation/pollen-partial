@@ -199,6 +199,6 @@ class SidebarDriver extends PartialDriver implements SidebarDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/sidebar");
+        return $this->partial()->resources("/views/sidebar");
     }
 }

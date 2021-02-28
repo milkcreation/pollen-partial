@@ -94,6 +94,6 @@ class NoticeDriver extends PartialDriver implements NoticeDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/notice");
+        return $this->partial()->resources("/views/notice");
     }
 }

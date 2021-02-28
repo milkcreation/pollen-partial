@@ -8,31 +8,27 @@ use Closure;
 use InvalidArgumentException;
 use Pollen\Http\JsonResponse;
 use Pollen\Http\JsonResponseInterface;
-use Pollen\Http\Request;
-use Pollen\Http\RequestInterface;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ParamsBagDelegateTrait;
 use Pollen\Support\Proxy\HttpRequestProxy;
 use Pollen\Support\HtmlAttrs;
+use Pollen\Support\Proxy\PartialProxy;
 use Pollen\Support\Str;
+use Pollen\View\ViewEngine;
+use Pollen\View\ViewEngineInterface;
 
 abstract class PartialDriver implements PartialDriverInterface
 {
     use BootableTrait;
     use HttpRequestProxy;
     use ParamsBagDelegateTrait;
+    use PartialProxy;
 
     /**
      * Indice de l'instance dans le gestionnaire.
      * @var int
      */
     private $index = 0;
-
-    /**
-     * Instance du gestionnaire.
-     * @var PartialManagerInterface
-     */
-    private $partialManager;
 
     /**
      * Alias de qualification.
@@ -54,14 +50,8 @@ abstract class PartialDriver implements PartialDriverInterface
     protected $id = '';
 
     /**
-     * Instance de la requête HTTP associée.
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
      * Instance du moteur de gabarits d'affichage.
-     * @var PartialViewEngineInterface
+     * @var ViewEngineInterface
      */
     protected $viewEngine;
 
@@ -70,7 +60,7 @@ abstract class PartialDriver implements PartialDriverInterface
      */
     public function __construct(PartialManagerInterface $partialManager)
     {
-        $this->partialManager = $partialManager;
+        $this->setPartialManager($partialManager);
     }
 
     /**
@@ -198,23 +188,9 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function getRequest(): RequestInterface
-    {
-        if (is_null($this->request)) {
-            $this->request = $this->partialManager()->containerHas(RequestInterface::class)
-                ? $this->partialManager()->containerGet(RequestInterface::class)
-                : Request::createFromGlobals();
-        }
-
-        return $this->request;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getXhrUrl(array $params = []): string
     {
-        return $this->partialManager()->getXhrRouteUrl($this->getAlias(), null, $params);
+        return $this->partial()->getXhrRouteUrl($this->getAlias(), null, $params);
     }
 
     /**
@@ -254,14 +230,6 @@ abstract class PartialDriver implements PartialDriverInterface
             $this->forget('attrs.id');
         }
         return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function partialManager(): PartialManagerInterface
-    {
-        return $this->partialManager;
     }
 
     /**
@@ -313,17 +281,7 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function setRequest(RequestInterface $request): PartialDriverInterface
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setViewEngine(PartialViewEngineInterface $viewEngine): PartialDriverInterface
+    public function setViewEngine(ViewEngineInterface $viewEngine): PartialDriverInterface
     {
         $this->viewEngine = $viewEngine;
 
@@ -338,7 +296,7 @@ abstract class PartialDriver implements PartialDriverInterface
         if (is_null($this->viewEngine)) {
             $directory = null;
             $overrideDir = null;
-            $default = $this->partialManager()->config('default.driver.viewer', []);
+            $default = $this->partial()->config('default.driver.viewer', []);
 
             $directory = $this->get('viewer.directory');
             if ($directory && !file_exists($directory)) {
@@ -373,14 +331,29 @@ abstract class PartialDriver implements PartialDriverInterface
                 }
             }
 
-            $this->viewEngine = $this->partialManager()->containerHas(PartialViewEngineInterface::class)
-                ? $this->partialManager()->containerGet(PartialViewEngineInterface::class)
-                : new PartialViewEngine();
+            $this->viewEngine = new ViewEngine();
+            if ($container = $this->partial()->getContainer()) {
+                $this->viewEngine->setContainer($container);
+            }
 
-            $this->viewEngine->setDirectory($directory)->setDelegate($this);
+            $this->viewEngine->setDirectory($directory)->setDelegate($this)->setLoader(PartialViewLoader::class);
 
             if ($overrideDir !== null) {
                 $this->viewEngine->addFolder('_override_dir', $overrideDir, true);
+            }
+
+            $mixins = [
+                'after',
+                'attrs',
+                'before',
+                'content',
+                'getAlias',
+                'getId',
+                'getIndex'
+            ];
+
+            foreach($mixins as $mixin){
+                $this->viewEngine->setDelegateMixin($mixin);
             }
         }
 

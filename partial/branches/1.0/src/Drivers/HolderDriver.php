@@ -34,6 +34,6 @@ class HolderDriver extends PartialDriver implements HolderDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/holder");
+        return $this->partial()->resources("/views/holder");
     }
 }

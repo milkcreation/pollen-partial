@@ -70,6 +70,6 @@ class SpinnerDriver extends PartialDriver implements SpinnerDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/spinner");
+        return $this->partial()->resources("/views/spinner");
     }
 }

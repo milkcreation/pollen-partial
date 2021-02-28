@@ -49,7 +49,7 @@ class PdfViewerDriver extends PartialDriver implements PdfViewerDriverInterface
         $args['attrs']['data-control'] = 'modal-pdf';
 
         /** @var ModalDriverInterface $modal */
-        $modal = $this->partialManager()->get('modal', $args);
+        $modal = $this->partial()->get('modal', $args);
 
         return $modal;
     }
@@ -99,6 +99,6 @@ class PdfViewerDriver extends PartialDriver implements PdfViewerDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/pdf-viewer");
+        return $this->partial()->resources("/views/pdf-viewer");
     }
 }

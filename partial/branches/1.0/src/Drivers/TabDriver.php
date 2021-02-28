@@ -129,7 +129,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
                 'data'     => [],
                 'dataType' => 'json',
                 'method'   => 'post',
-                'url'      => $this->partialManager()->getXhrRouteUrl('tab'),
+                'url'      => $this->partial()->getXhrRouteUrl('tab'),
             ];
             $this->set('attrs.data-options.ajax', is_array($ajax) ? array_merge($defaultsAjax, $ajax) : $defaultsAjax);
         }
@@ -177,7 +177,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/tab");
+        return $this->partial()->resources("/views/tab");
     }
 
     /**

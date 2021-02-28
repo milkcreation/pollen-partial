@@ -63,6 +63,6 @@ class SliderDriver extends PartialDriver implements SliderDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/slider");
+        return $this->partial()->resources("/views/slider");
     }
 }

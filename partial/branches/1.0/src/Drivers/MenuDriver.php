@@ -16,6 +16,6 @@ class MenuDriver extends PartialDriver implements MenuDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/menu");
+        return $this->partial()->resources("/views/menu");
     }
 }

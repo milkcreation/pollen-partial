@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Pollen\Partial;
 
 use Pollen\Http\JsonResponseInterface;
-use Pollen\Http\RequestInterface;
 use Pollen\Support\Concerns\ParamsBagDelegateTraitInterface;
 use Pollen\Support\Proxy\HttpRequestProxyInterface;
+use Pollen\Support\Proxy\PartialProxyInterface;
+use Pollen\View\ViewEngineInterface;
 
-interface PartialDriverInterface extends HttpRequestProxyInterface, ParamsBagDelegateTraitInterface
+interface PartialDriverInterface extends
+    HttpRequestProxyInterface,
+    ParamsBagDelegateTraitInterface,
+    PartialProxyInterface
 {
     /**
      * Résolution de sortie de la classe en tant que chaîne de caractère.
@@ -82,13 +86,6 @@ interface PartialDriverInterface extends HttpRequestProxyInterface, ParamsBagDel
     public function getIndex(): int;
 
     /**
-     * Récupération de l'instance de la requête HTTP associée.
-     *
-     * @return RequestInterface
-     */
-    public function getRequest(): RequestInterface;
-
-    /**
      * Récupération de l'url de traitement des requêtes XHR.
      *
      * @param array $params
@@ -110,13 +107,6 @@ interface PartialDriverInterface extends HttpRequestProxyInterface, ParamsBagDel
      * @return static
      */
     public function parseAttrId(): PartialDriverInterface;
-
-    /**
-     * Récupération du gestionnaire.
-     *
-     * @return PartialManagerInterface
-     */
-    public function partialManager(): PartialManagerInterface;
 
     /**
      * Affichage.
@@ -162,22 +152,13 @@ interface PartialDriverInterface extends HttpRequestProxyInterface, ParamsBagDel
     public function setIndex(int $index): PartialDriverInterface;
 
     /**
-     * Définition de l'instance de la requête HTTP associée.
-     *
-     * @param RequestInterface $request
-     *
-     * @return static
-     */
-    public function setRequest(RequestInterface $request): PartialDriverInterface;
-
-    /**
      * Définition de l'instance du moteur d'affichage.
      *
-     * @param PartialViewEngineInterface $viewEngine
+     * @param ViewEngineInterface $viewEngine
      *
      * @return static
      */
-    public function setViewEngine(PartialViewEngineInterface $viewEngine): PartialDriverInterface;
+    public function setViewEngine(ViewEngineInterface $viewEngine): PartialDriverInterface;
 
     /**
      * Instance du gestionnaire de gabarits d'affichage ou rendu du gabarit d'affichage.
@@ -185,7 +166,7 @@ interface PartialDriverInterface extends HttpRequestProxyInterface, ParamsBagDel
      * @param string|null view Nom de qualification du gabarit.
      * @param array $data Liste des variables passées en argument.
      *
-     * @return PartialViewEngineInterface|string
+     * @return ViewEngineInterface|string
      */
     public function view(?string $view = null, array $data = []);
 

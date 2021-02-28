@@ -37,7 +37,6 @@ class PartialServiceProvider extends BaseServiceProvider
      */
     protected $provides = [
         PartialManagerInterface::class,
-        PartialViewEngineInterface::class,
         AccordionDriver::class,
         BreadcrumbDriver::class,
         BurgerButtonDriver::class,
@@ -73,7 +72,6 @@ class PartialServiceProvider extends BaseServiceProvider
             }
         );
         $this->registerDrivers();
-        $this->registerViewEngine();
     }
 
     /**
@@ -214,21 +212,6 @@ class PartialServiceProvider extends BaseServiceProvider
             TagDriver::class,
             function () {
                 return new TagDriver($this->getContainer()->get(PartialManagerInterface::class));
-            }
-        );
-    }
-
-    /**
-     * Déclaration du moteur d'affichage.
-     *
-     * @return void
-     */
-    public function registerViewEngine(): void
-    {
-        $this->getContainer()->add(
-            PartialViewEngineInterface::class,
-            function () {
-                return new PartialViewEngine();
             }
         );
     }
