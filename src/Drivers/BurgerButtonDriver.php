@@ -106,6 +106,6 @@ class BurgerButtonDriver extends PartialDriver implements BurgerButtonDriverInte
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/burger-button");
+        return $this->partial()->resources("/views/burger-button");
     }
 }

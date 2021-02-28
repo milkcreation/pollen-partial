@@ -68,6 +68,6 @@ class GridTableDriver extends PartialDriver implements TableDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/table");
+        return $this->partial()->resources("/views/table");
     }
 }

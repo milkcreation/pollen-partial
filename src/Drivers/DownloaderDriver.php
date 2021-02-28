@@ -54,7 +54,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
                 /**
                  * @var string $src Fichier à télécharger. Chemin absolu|relatif au basedir|Url du site.
                  */
-                'src'     => $this->partialManager()->resources('/sample/sample.txt'),
+                'src'     => $this->partial()->resources('/sample/sample.txt'),
                 /**
                  * @var string $tag Balise HTML d'encapsulation du déclencheur de téléchargement
                  */
@@ -196,6 +196,6 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/downloader");
+        return $this->partial()->resources("/views/downloader");
     }
 }

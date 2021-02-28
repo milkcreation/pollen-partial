@@ -81,6 +81,6 @@ class AccordionDriver extends PartialDriver implements AccordionDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/accordion");
+        return $this->partial()->resources("/views/accordion");
     }
 }

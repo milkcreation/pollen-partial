@@ -75,7 +75,7 @@ class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInte
 
         $this->set('attrs.data-options', [
             'ajax' => [
-                'url'    => $this->partialManager()->getXhrRouteUrl('cookie-notice'),
+                'url'    => $this->partial()->getXhrRouteUrl('cookie-notice'),
                 'data'   => [
                     '_id'     => $this->getId(),
                     '_cookie' => $this->get('cookie', []),
@@ -108,7 +108,7 @@ class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInte
 
         $args['attrs']['data-toggle'] = 'notice.trigger';
 
-        return $this->partialManager()->get('tag', $args)->render();
+        return $this->partial()->get('tag', $args)->render();
     }
 
     /**
@@ -116,7 +116,7 @@ class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInte
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/cookie-notice");
+        return $this->partial()->resources("/views/cookie-notice");
     }
 
     /**

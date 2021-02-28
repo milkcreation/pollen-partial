@@ -71,7 +71,7 @@ class ProgressDriver extends PartialDriver implements ProgressDriverInterface
         $this->set([
             'attrs.data-control' => $this->get('attrs.data-control', 'progress'),
             'attrs.data-options' => [
-                'label' => !!$this->get('label') ? 'fixed' : 'auto',
+                'label' => (bool)$this->get('label') ? 'fixed' : 'auto',
                 'max'   => $this->get('max', 100),
                 'value' => $this->get('value', 0),
             ],
@@ -83,6 +83,6 @@ class ProgressDriver extends PartialDriver implements ProgressDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/progress");
+        return $this->partial()->resources("/views/progress");
     }
 }

@@ -195,7 +195,7 @@ class ModalDriver extends PartialDriver implements ModalDriverInterface
                 'data'     => [],
                 'dataType' => 'json',
                 'method'   => 'post',
-                'url'      => $this->partialManager()->getXhrRouteUrl('modal'),
+                'url'      => $this->partial()->getXhrRouteUrl('modal'),
             ];
 
             $this->set([
@@ -246,7 +246,7 @@ class ModalDriver extends PartialDriver implements ModalDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/modal");
+        return $this->partial()->resources("/views/modal");
     }
 
     /**

@@ -66,6 +66,6 @@ class TagDriver extends PartialDriver implements TagDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partialManager()->resources("/views/tag");
+        return $this->partial()->resources("/views/tag");
     }
 }
