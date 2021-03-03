@@ -77,11 +77,11 @@ class BurgerButtonDriver extends PartialDriver implements BurgerButtonDriverInte
     public function render(): string
     {
         $type = $this->get('type');
-        if (!in_array($type, $this->types)) {
+        if (!in_array($type, $this->types, true)) {
             $type = 'spring';
         }
 
-        $burgerClass = "hamburger hamburger--{$type}" . (!!$this->get('active') ? ' is-active' : '');
+        $burgerClass = "hamburger hamburger--{$type}" . ((bool)$this->get('active') ? ' is-active' : '');
 
         $this->set([
             'attrs.class'        => ($class = $this->get('attrs.class')) ? "{$class} {$burgerClass}" : $burgerClass,
@@ -106,6 +106,6 @@ class BurgerButtonDriver extends PartialDriver implements BurgerButtonDriverInte
      */
     public function viewDirectory(): string
     {
-        return $this->partial()->resources("/views/burger-button");
+        return $this->partial()->resources('/views/burger-button');
     }
 }

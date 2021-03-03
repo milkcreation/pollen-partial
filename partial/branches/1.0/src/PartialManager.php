@@ -31,7 +31,7 @@ use Pollen\Partial\Drivers\ProgressDriver;
 //use Pollen\Partial\Drivers\SidebarDriver;
 //use Pollen\Partial\Drivers\SliderDriver;
 use Pollen\Partial\Drivers\SpinnerDriver;
-//use Pollen\Partial\Drivers\TabDriver;
+use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
 use Pollen\Routing\RouteInterface;
 use Pollen\Support\Filesystem;
@@ -78,7 +78,7 @@ class PartialManager implements PartialManagerInterface
         //'sidebar'        => SidebarDriver::class,
         //'slider'         => SliderDriver::class,
         'spinner'        => SpinnerDriver::class,
-        //'tab'            => TabDriver::class,
+        'tab'            => TabDriver::class,
         'tag'            => TagDriver::class,
     ];
 
@@ -114,7 +114,7 @@ class PartialManager implements PartialManagerInterface
     {
         $this->setConfig($config);
 
-        if (!is_null($container)) {
+        if ($container !== null) {
             $this->setContainer($container);
         }
 

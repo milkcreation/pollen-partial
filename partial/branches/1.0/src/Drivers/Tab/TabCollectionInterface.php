@@ -62,18 +62,18 @@ interface TabCollectionInterface
     /**
      * Définition du gestionnaire associé.
      *
-     * @param TabDriverInterface $tabManager
+     * @param TabDriverInterface $tabDriver
      *
      * @return static
      */
-    public function setTabManager(TabDriverInterface $tabManager): TabCollectionInterface;
+    public function setTabDriver(TabDriverInterface $tabDriver): TabCollectionInterface;
 
     /**
      * Instance du gestionnaire associé
      *
      * @return TabDriverInterface|null
      */
-    public function tabManager(): ?TabDriverInterface;
+    public function tabDriver(): ?TabDriverInterface;
 
     /**
      * Traitement récursif de la liste des éléments.

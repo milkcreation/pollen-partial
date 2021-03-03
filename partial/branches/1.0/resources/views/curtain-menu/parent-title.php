@@ -1,6 +1,6 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
- * @var tiFy\Partial\Drivers\CurtainMenu\CurtainMenuItemInterface $parent
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
+ * @var Pollen\Partial\Drivers\CurtainMenu\CurtainMenuItemInterface $parent
  */
-echo partial('tag', $parent->getTitle());
+echo $this->partial('tag', $parent->getTitle());
