@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Exception;
+use Pollen\Http\JsonResponse;
+use Pollen\Http\JsonResponseInterface;
 use Pollen\Partial\Drivers\Tab\TabCollection;
 use Pollen\Partial\Drivers\Tab\TabCollectionInterface;
-use Pollen\Partial\Drivers\Tab\TabView;
+use Pollen\Partial\Drivers\Tab\TabViewLoader;
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
-use tiFy\Support\Proxy\Url;
-use tiFy\Support\Proxy\Request;
-use tiFy\Support\Proxy\Session;
+use Pollen\Support\Proxy\SessionProxy;
 
 class TabDriver extends PartialDriver implements TabDriverInterface
 {
+    use SessionProxy;
+
     /**
      * Collection des éléments déclaré.
      * @var TabCollectionInterface
@@ -72,7 +73,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
     {
         if (!$active = $this->get('active')) {
             $sessionName = md5(Url::current()->path() . $this->getId());
-            if ($this->get('ajax') && ($store = Session::registerStore($sessionName))) {
+            if ($this->get('ajax') && ($store = $this->session()->registerStore($sessionName))) {
                 $active = $store->get('active', '');
                 $this->set('attrs.data-options.ajax.data.session', $sessionName);
             }
@@ -87,7 +88,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
     public function getTabCollection(): TabCollectionInterface
     {
         if (is_null($this->tabCollection)) {
-            $this->tabCollection = (new TabCollection([]))->setTabManager($this);
+            $this->tabCollection = (new TabCollection([]))->setTabDriver($this);
         }
 
         return $this->tabCollection;
@@ -154,7 +155,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function setTabCollection(TabCollectionInterface $tabCollection): TabDriverInterface
     {
-        $this->tabCollection = $tabCollection->setTabManager($this);
+        $this->tabCollection = $tabCollection->setTabDriver($this);
 
         return $this;
     }
@@ -164,9 +165,10 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function view(?string $view = null, $data = [])
     {
-        if (is_null($this->viewEngine)) {
+        if ($this->viewEngine === null) {
             $viewEngine = parent::view();
-            $viewEngine->setFactory(TabView::class);
+            $viewEngine->setLoader(TabViewLoader::class);
+            $this->viewEngine->setDelegateMixin('getTabStyle');
         }
 
         return parent::view($view, $data);
@@ -177,20 +179,19 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function viewDirectory(): string
     {
-        return $this->partial()->resources("/views/tab");
+        return $this->partial()->resources('/views/tab');
     }
 
     /**
      * @inheritDoc
      */
-    public function xhrResponse(...$args): array
+    public function xhrResponse(...$args): JsonResponseInterface
     {
         if (($sessionName = Request::input('session')) && $store = Session::registerStore($sessionName)) {
             $store->put('active', Request::input('active'));
 
-            return ['success' => true];
-        } else {
-            return ['success' => false];
+            return new JsonResponse(['success' => true]);
         }
+        return new JsonResponse(['success' => false]);
     }
 }

@@ -7,6 +7,7 @@ namespace Pollen\Partial\Drivers\Tab;
 use Exception;
 use Illuminate\Support\Collection;
 use Pollen\Partial\Drivers\TabDriverInterface;
+use RuntimeException;
 
 class TabCollection implements TabCollectionInterface
 {
@@ -43,14 +44,14 @@ class TabCollection implements TabCollectionInterface
      * Instance du gestionnaire.
      * @var TabDriverInterface|null
      */
-    private $tabManager;
+    private $tabDriver;
 
     /**
      * @param TabFactoryInterface[]|array|null $items Liste des éléments ou Liste d'attributs d'élements.
      */
     public function __construct($items = null)
     {
-        foreach((array) $items as $item) {
+        foreach ((array)$items as $item) {
             $this->add($item);
         }
     }
@@ -70,14 +71,15 @@ class TabCollection implements TabCollectionInterface
             if (!is_array($def)) {
                 $def = [];
             }
-            $item = (new TabFactory())->set($def);
+            $item = new TabFactory();
+            $item->set($def);
         } else {
             $item = $def;
         }
 
         try {
             $this->items[] = $item->setCollection($this)->build();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             unset($e);
         }
 
@@ -90,13 +92,13 @@ class TabCollection implements TabCollectionInterface
     public function boot(): TabCollectionInterface
     {
         if (!$this->booted) {
-            if (is_null($this->tabManager)) {
-                throw new Exception('Unresolvable TabManager');
+            if (is_null($this->tabDriver)) {
+                throw new RuntimeException('TabCollection could not resolves TabDriver');
             }
 
             $this->booted = true;
 
-            foreach($this->preBootItems as $def) {
+            foreach ($this->preBootItems as $def) {
                 $this->add($def);
             }
 
@@ -111,9 +113,11 @@ class TabCollection implements TabCollectionInterface
      */
     public function get(string $name): ?TabFactoryInterface
     {
-        return (new Collection($this->items))->first(function(TabFactoryInterface $item) use ($name) {
-            return $item->getName() === $name;
-        }) ? : null;
+        return (new Collection($this->items))->first(
+            function (TabFactoryInterface $item) use ($name) {
+                return $item->getName() === $name;
+            }
+        ) ?: null;
     }
 
     /**
@@ -143,9 +147,9 @@ class TabCollection implements TabCollectionInterface
     /**
      * @inheritDoc
      */
-    public function setTabManager(TabDriverInterface $tabManager): TabCollectionInterface
+    public function setTabDriver(TabDriverInterface $tabDriver): TabCollectionInterface
     {
-        $this->tabManager = $tabManager;
+        $this->tabDriver = $tabDriver;
 
         return $this;
     }
@@ -153,16 +157,19 @@ class TabCollection implements TabCollectionInterface
     /**
      * @inheritDoc
      */
-    public function tabManager(): ?TabDriverInterface
+    public function tabDriver(): ?TabDriverInterface
     {
-        return $this->tabManager;
+        return $this->tabDriver;
     }
 
     /**
      * @inheritDoc
      */
-    public function walkRecursiveItems(?array $items = null, int $depth = 0, string $parent = ''): TabCollectionInterface
-    {
+    public function walkRecursiveItems(
+        ?array $items = null,
+        int $depth = 0,
+        string $parent = ''
+    ): TabCollectionInterface {
         if (is_null($items)) {
             $items = $this->items;
         }
@@ -170,10 +177,9 @@ class TabCollection implements TabCollectionInterface
         foreach ($items as $item) {
             if ($parent !== $item->getParentName()) {
                 continue;
-            } else {
-                $item->setDepth($depth)->boot();
-                $this->walkRecursiveItems($items, $depth + 1, $item->getName());
             }
+            $item->setDepth($depth)->boot();
+            $this->walkRecursiveItems($items, $depth + 1, $item->getName());
         }
         return $this;
     }
@@ -186,17 +192,21 @@ class TabCollection implements TabCollectionInterface
         if (is_null($items)) {
             $items = $this->items;
         }
-         $this->grouped = (new Collection($items))->groupBy('parent');
+        $this->grouped = (new Collection($items))->groupBy('parent');
 
         foreach ($this->grouped as $key => $groupedItems) {
-            $max = $groupedItems->max(function (TabFactoryInterface $item) {
-                return $item['position'];
-            }) ? : 0;
+            $max = $groupedItems->max(
+                function (TabFactoryInterface $item) {
+                    return $item['position'];
+                }
+            ) ?: 0;
             $pad = 0;
 
-            $this->grouped[$key] = $groupedItems->each(function (TabFactoryInterface $item) use (&$pad, $max) {
-                $tab['position'] = is_numeric($item['position']) ? (int)$item['position'] : ++$pad + $max;
-            })->sortBy('position')->values();
+            $this->grouped[$key] = $groupedItems->each(
+                function (TabFactoryInterface $item) use (&$pad, $max) {
+                    $tab['position'] = is_numeric($item['position']) ? (int)$item['position'] : ++$pad + $max;
+                }
+            )->sortBy('position')->values();
         }
 
         return $this;

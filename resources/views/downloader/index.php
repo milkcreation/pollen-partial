@@ -1,8 +1,8 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
  */
 ?>
 <?php $this->before(); ?>
-<?php echo partial('tag', $this->get('trigger', [])); ?>
+<?php echo $this->partial('tag', $this->get('trigger', [])); ?>
 <?php $this->after();

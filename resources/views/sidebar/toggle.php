@@ -1,5 +1,5 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
  */
-echo partial('tag', $this->get('attrs', []));
+echo $this->partial('tag', $this->get('attrs', []));

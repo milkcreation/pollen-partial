@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Pagination;
 
-use Pollen\Partial\PartialView;
+use Pollen\Partial\Drivers\PaginationDriverInterface;
+use Pollen\Partial\PartialViewLoader;
+use RuntimeException;
 
-/**
- * @method PaginationQueryInterface query()
- */
-class PaginationView extends PartialView
+class PaginationView extends PartialViewLoader
 {
     /**
-     * @inheritDoc
+     * Récupération de l'instance de délégation.
+     *
+     * @return PaginationDriverInterface
      */
-    public function __call($name, $arguments)
+    protected function getDelegate(): PaginationDriverInterface
     {
-        array_push($this->mixins, 'query');
+        /** @var PaginationDriverInterface|object|null $delegate */
+        $delegate = $this->engine->getDelegate();
+        if ($delegate instanceof PaginationDriverInterface) {
+            return $delegate;
+        }
 
-        return parent::__call($name, $arguments);
+        throw new RuntimeException('MailableViewLoader must have a delegate Mailable instance');
     }
 
     /**
@@ -28,7 +33,7 @@ class PaginationView extends PartialView
      */
     public function getCurrentPage(): int
     {
-        return $this->query()->getCurrentPage();
+        return $this->getDelegate()->query()->getCurrentPage();
     }
 
     /**
@@ -38,6 +43,6 @@ class PaginationView extends PartialView
      */
     public function getLastPage(): int
     {
-        return $this->query()->getLastPage();
+        return $this->getDelegate()->query()->getLastPage();
     }
 }

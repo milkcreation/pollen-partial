@@ -55,7 +55,7 @@ class NoticeDriver extends PartialDriver implements NoticeDriverInterface
                 $dismiss = [];
             }
 
-            $this->set('dismiss', partial('tag', array_merge([
+            $this->set('dismiss', $this->partial()->get('tag', array_merge([
                 'tag'     => 'button',
                 'attrs'   => [
                     'data-toggle' => 'notice.dismiss',

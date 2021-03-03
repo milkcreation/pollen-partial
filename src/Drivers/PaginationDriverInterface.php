@@ -60,7 +60,7 @@ interface PaginationDriverInterface extends PartialDriverInterface
     /**
      * Récupération de l'instance du gestionnaire de requête de récupération des arguments de pagination.
      *
-     * @return PaginationQueryInterface|null
+     * @return PaginationQueryInterface
      */
-    public function query(): ?PaginationQueryInterface;
+    public function query(): PaginationQueryInterface;
 }

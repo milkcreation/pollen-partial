@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers\Tab;
 
 use Exception;
-use tiFy\Contracts\Support\ParamsBag;
+use Pollen\Support\Concerns\BootableTraitInterface;
+use Pollen\Support\Concerns\BuildableTraitInterface;
+use Pollen\Support\ParamsBagInterface;
 
-interface TabFactoryInterface extends ParamsBag
+interface TabFactoryInterface extends BootableTraitInterface, BuildableTraitInterface, ParamsBagInterface
 {
     /**
      * Résolution de sortie la classe sous forme de chaîne de caractère.

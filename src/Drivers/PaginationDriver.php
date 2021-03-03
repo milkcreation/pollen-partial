@@ -8,7 +8,6 @@ use Pollen\Partial\Drivers\Pagination\PaginationQuery;
 use Pollen\Partial\Drivers\Pagination\PaginationQueryInterface;
 use Pollen\Partial\Drivers\Pagination\PaginationView;
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
 
 class PaginationDriver extends PartialDriver implements PaginationDriverInterface
 {
@@ -255,7 +254,7 @@ class PaginationDriver extends PartialDriver implements PaginationDriverInterfac
     /**
      * @inheritDoc
      */
-    public function query(): ?PaginationQueryInterface
+    public function query(): PaginationQueryInterface
     {
         return $this->query;
     }

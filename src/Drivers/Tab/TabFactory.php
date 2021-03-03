@@ -5,23 +5,16 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers\Tab;
 
 use Closure;
-use Exception;
-use tiFy\Support\HtmlAttrs;
-use tiFy\Support\ParamsBag;
+use Pollen\Support\Concerns\BootableTrait;
+use Pollen\Support\Concerns\BuildableTrait;
+use Pollen\Support\HtmlAttrs;
+use Pollen\Support\ParamsBag;
+use RuntimeException;
 
 class TabFactory extends ParamsBag implements TabFactoryInterface
 {
-    /**
-     * Indicateur de chargement
-     * @var bool
-     */
-    private $booted = false;
-
-    /**
-     * Indicateur d'initialisation
-     * @var bool
-     */
-    private $built = false;
+    use BootableTrait;
+    use BuildableTrait;
 
     /**
      * Instance du gestionnaire d'éléments.
@@ -68,10 +61,14 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
      */
     private function generateIds(): void
     {
-        $this->index = $this->collection()->getIncreasedItemIdx();
-        $this->id = "tab-{$this->collection()->tabManager()->getIndex()}--{$this->index}";
+        if (!$tabDriver = $this->collection()->tabDriver()) {
+            throw new RuntimeException('Tab factory generation id failed');
+        }
 
-        $name = $this->get('name', null);
+        $this->index = $this->collection()->getIncreasedItemIdx();
+        $this->id = "tab-{$tabDriver->getIndex()}--{$this->index}";
+
+        $name = $this->get('name');
         if (!$name || !is_string($name)) {
             $this->set('name', $this->id);
         }
@@ -82,10 +79,10 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
      */
     public function boot(): TabFactoryInterface
     {
-        if (!$this->booted) {
+        if (!$this->isBooted()) {
             $this->parse();
 
-            $this->booted = true;
+            $this->setBooted();
         }
 
         return $this;
@@ -96,14 +93,14 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
      */
     public function build(): TabFactoryInterface
     {
-        if (!$this->built) {
+        if (!$this->isBuilt()) {
             try {
                 $this->generateIds();
-            } catch (Exception $e) {
-                throw new Exception('Tab factory generation id failed');
+            } catch (RuntimeException $e) {
+                throw $e;
             }
 
-            $this->built = true;
+            $this->setBuilt();
         }
 
         return $this;
@@ -161,7 +158,8 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
     public function getContent(): string
     {
         $content = $this->get('content');
-        return $content instanceof Closure ? call_user_func($content) : (string)$content;
+
+        return $content instanceof Closure ? $content() : (string)$content;
     }
 
     /**
@@ -214,7 +212,7 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
     public function getParent(): ?TabFactoryInterface
     {
         if (is_null($this->parent)) {
-            if ($name = $this->get('parent', null)) {
+            if ($name = $this->get('parent')) {
                 $this->parent = $this->collection()->get($name) ?: false;
             } else {
                 $this->parent = false;
