@@ -6,7 +6,7 @@ namespace Pollen\Partial\Drivers;
 
 use Exception;
 use Pollen\Http\JsonResponse;
-use Pollen\Http\JsonResponseInterface;
+use Pollen\Http\ResponseInterface;
 use Pollen\Partial\Drivers\Tab\TabCollection;
 use Pollen\Partial\Drivers\Tab\TabCollectionInterface;
 use Pollen\Partial\Drivers\Tab\TabViewLoader;
@@ -185,7 +185,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
     /**
      * @inheritDoc
      */
-    public function xhrResponse(...$args): JsonResponseInterface
+    public function xhrResponse(...$args): ResponseInterface
     {
         if (($sessionName = Request::input('session')) && $store = Session::registerStore($sessionName)) {
             $store->put('active', Request::input('active'));
