@@ -7,7 +7,7 @@ namespace Pollen\Partial;
 use Closure;
 use InvalidArgumentException;
 use Pollen\Http\JsonResponse;
-use Pollen\Http\JsonResponseInterface;
+use Pollen\Http\ResponseInterface;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ParamsBagDelegateTrait;
 use Pollen\Support\Proxy\HttpRequestProxy;
@@ -188,9 +188,9 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function getXhrUrl(array $params = []): string
+    public function getXhrUrl(array $params = [], ?string $controller = null): string
     {
-        return $this->partial()->getXhrRouteUrl($this->getAlias(), null, $params);
+        return $this->partial()->getXhrRouteUrl($this->getAlias(), $controller, $params);
     }
 
     /**
@@ -372,7 +372,7 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function xhrResponse(...$args): JsonResponseInterface
+    public function xhrResponse(...$args): ResponseInterface
     {
         return new JsonResponse([
             'success' => true,
