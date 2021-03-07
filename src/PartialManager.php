@@ -248,9 +248,10 @@ class PartialManager implements PartialManagerInterface
      */
     public function register(string $alias, $driverDefinition, ?Closure $registerCallback = null): PartialManagerInterface
     {
-        if (isset($this->driverDefinitions[$alias])) {
+        /*if (isset($this->driverDefinitions[$alias])) {
             throw new RuntimeException(sprintf('Another PartialDriver with alias [%s] already registered', $alias));
-        }
+        }*/
+
         $this->driverDefinitions[$alias] = $driverDefinition;
 
         if ($registerCallback !== null) {
