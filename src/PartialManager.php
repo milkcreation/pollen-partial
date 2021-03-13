@@ -221,7 +221,7 @@ class PartialManager implements PartialManagerInterface
         }
 
         if (is_string($def) && $this->containerHas($def)) {
-            return $this->containerGet($def);
+            return clone $this->containerGet($def);
         }
 
         if (is_string($def) && class_exists($def)) {
