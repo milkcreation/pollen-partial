@@ -25,7 +25,6 @@ use Pollen\Partial\Drivers\HolderDriver;
 //use Pollen\Partial\Drivers\MenuDriver;
 //use Pollen\Partial\Drivers\ModalDriver;
 use Pollen\Partial\Drivers\NoticeDriver;
-//use Pollen\Partial\Drivers\PdfViewerDriver;
 use Pollen\Partial\Drivers\ProgressDriver;
 //use Pollen\Partial\Drivers\SidebarDriver;
 //use Pollen\Partial\Drivers\SliderDriver;
@@ -71,7 +70,6 @@ class PartialManager implements PartialManagerInterface
         //'menu'           => MenuDriver::class,
         //'modal'          => ModalDriver::class,
         'notice'         => NoticeDriver::class,
-        //'pdf-viewer'     => PdfViewerDriver::class,
         'progress'       => ProgressDriver::class,
         //'sidebar'        => SidebarDriver::class,
         //'slider'         => SliderDriver::class,
