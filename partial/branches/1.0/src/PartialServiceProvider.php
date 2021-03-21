@@ -19,7 +19,6 @@ use Pollen\Partial\Drivers\ImageLightboxDriver;
 use Pollen\Partial\Drivers\MenuDriver;
 use Pollen\Partial\Drivers\ModalDriver;
 use Pollen\Partial\Drivers\NoticeDriver;
-use Pollen\Partial\Drivers\PdfViewerDriver;
 use Pollen\Partial\Drivers\ProgressDriver;
 use Pollen\Partial\Drivers\SidebarDriver;
 use Pollen\Partial\Drivers\SliderDriver;
@@ -49,7 +48,6 @@ class PartialServiceProvider extends BaseServiceProvider
         MenuDriver::class,
         ModalDriver::class,
         NoticeDriver::class,
-        PdfViewerDriver::class,
         ProgressDriver::class,
         SidebarDriver::class,
         SliderDriver::class,
@@ -161,12 +159,6 @@ class PartialServiceProvider extends BaseServiceProvider
             NoticeDriver::class,
             function () {
                 return new NoticeDriver($this->getContainer()->get(PartialManagerInterface::class));
-            }
-        );
-        $this->getContainer()->add(
-            PdfViewerDriver::class,
-            function () {
-                return new PdfViewerDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
