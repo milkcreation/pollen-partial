@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\ImageLightbox;
 
-use Pollen\Support\HtmlAttrs;
+use Pollen\Support\Html;
 use Pollen\Support\ParamsBag;
 
 class ImageLightboxItem extends ParamsBag implements ImageLightboxItemInterface
@@ -30,7 +30,7 @@ class ImageLightboxItem extends ParamsBag implements ImageLightboxItemInterface
      */
     public function getAttrs(bool $linearize = true)
     {
-        return HtmlAttrs::createFromAttrs($this->get('attrs', []), $linearize);
+        return $linearize ? Html::attr($this->get('attrs', [])) : $this->get('attrs', []);
     }
 
     /**
@@ -38,7 +38,7 @@ class ImageLightboxItem extends ParamsBag implements ImageLightboxItemInterface
      */
     public function getContent(): string
     {
-        $thumbnail = $this->get('content', null);
+        $thumbnail = $this->get('content');
 
         if (is_null($thumbnail)) {
             return (string)partial('tag', [
@@ -48,9 +48,9 @@ class ImageLightboxItem extends ParamsBag implements ImageLightboxItemInterface
                     'alt' => basename($this->get('src')),
                 ],
             ]);
-        } else {
-            return is_callable($thumbnail) ? call_user_func($thumbnail) : (string)$thumbnail;
         }
+
+        return is_callable($thumbnail) ? call_user_func($thumbnail) : (string)$thumbnail;
     }
 
     /**

@@ -7,7 +7,7 @@ namespace Pollen\Partial\Drivers\Accordion;
 use Illuminate\Support\Collection;
 use Pollen\Partial\Drivers\AccordionDriverInterface;
 use Pollen\Support\Arr;
-use Pollen\Support\HtmlAttrs;
+use Pollen\Support\Html;
 
 class AccordionCollection implements AccordionCollectionInterface
 {
@@ -168,7 +168,7 @@ class AccordionCollection implements AccordionCollectionInterface
                 'aria-open'    => $item->isOpened() ? 'true' : 'false'
             ];
 
-            $output .= "<li " . HtmlAttrs::createFromAttrs($attrs) . ">";
+            $output .= "<li " . Html::attr($attrs) . ">";
             $output .= $this->partial->view('item', compact('item'));
             $output .= $this->walk($items, ($depth + 1), (string)$item->getId());
             $output .= "</li>";

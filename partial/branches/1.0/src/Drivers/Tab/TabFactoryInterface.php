@@ -95,11 +95,9 @@ interface TabFactoryInterface extends BootableTraitInterface, BuildableTraitInte
     /**
      * Liste des attributs HTML du lien de navigation de l'élément.
      *
-     * @param bool $linearized Activation de la linéarisation de la liste des attributs HTML.
-     *
-     * @return string|array
+     * @return string
      */
-    public function getNavAttrs(bool $linearized = true);
+    public function getNavAttrs();
 
     /**
      * Récupération du nom de qualification de l'élément parent.
