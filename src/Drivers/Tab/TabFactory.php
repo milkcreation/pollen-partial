@@ -7,7 +7,7 @@ namespace Pollen\Partial\Drivers\Tab;
 use Closure;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\BuildableTrait;
-use Pollen\Support\HtmlAttrs;
+use Pollen\Support\Html;
 use Pollen\Support\ParamsBag;
 use RuntimeException;
 
@@ -167,13 +167,13 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
      */
     public function getContentAttrs(bool $linearized = true): string
     {
-        $attrs = [
+        $attr = [
             'id'           => $this->getId(),
             'class'        => 'Tab-contentPane',
             'data-name'    => $this->getName(),
             'data-control' => 'tab.content.pane'
         ];
-        return HtmlAttrs::createFromAttrs($attrs, $linearized);
+        return Html::attr($attr);
     }
 
     /**
@@ -195,15 +195,15 @@ class TabFactory extends ParamsBag implements TabFactoryInterface
     /**
      * @inheritDoc
      */
-    public function getNavAttrs(bool $linearized = true): string
+    public function getNavAttrs(): string
     {
-        $attrs = [
+        $attr = [
             'class'         => 'Tab-navLink',
             'data-control'  => 'tab.nav.link',
             'data-name'     => $this->getName(),
             'href'          => "#{$this->getId()}",
         ];
-        return HtmlAttrs::createFromAttrs($attrs, $linearized);
+        return Html::attr($attr);
     }
 
     /**

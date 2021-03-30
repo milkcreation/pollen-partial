@@ -11,7 +11,7 @@ use Pollen\Http\ResponseInterface;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ParamsBagDelegateTrait;
 use Pollen\Support\Proxy\HttpRequestProxy;
-use Pollen\Support\HtmlAttrs;
+use Pollen\Support\Html;
 use Pollen\Support\Proxy\PartialProxy;
 use Pollen\Support\Str;
 use Pollen\View\ViewEngine;
@@ -84,7 +84,7 @@ abstract class PartialDriver implements PartialDriverInterface
      */
     public function attrs(): void
     {
-        echo HtmlAttrs::createFromAttrs($this->get('attrs', []));
+        echo Html::attr($this->get('attrs', []));
     }
 
     /**

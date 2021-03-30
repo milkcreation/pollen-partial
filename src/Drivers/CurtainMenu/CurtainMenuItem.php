@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\CurtainMenu;
 
-use Pollen\Support\HtmlAttrs;
+use Pollen\Support\Html;
 use Pollen\Support\ParamsBag;
 
 class CurtainMenuItem extends ParamsBag implements CurtainMenuItemInterface
@@ -76,7 +76,7 @@ class CurtainMenuItem extends ParamsBag implements CurtainMenuItemInterface
      */
     public function getAttrs(bool $linearized = true)
     {
-        return HtmlAttrs::createFromAttrs($this->get('attrs', []), $linearized);
+        return $linearized ? Html::attr($this->get('attrs', [])) : $this->get('attrs', []);
     }
 
     /**
