@@ -7,9 +7,8 @@ namespace Pollen\Partial;
 use Closure;
 use Exception;
 use InvalidArgumentException;
+use Pollen\Support\Concerns\ResourcesAwareTrait;
 use Pollen\Support\Proxy\RouterProxy;
-use RuntimeException;
-use League\Route\Http\Exception\NotFoundException;
 use Pollen\Http\ResponseInterface;
 //use Pollen\Partial\Drivers\AccordionDriver;
 //use Pollen\Partial\Drivers\BreadcrumbDriver;
@@ -32,17 +31,18 @@ use Pollen\Partial\Drivers\SpinnerDriver;
 use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
 use Pollen\Routing\RouteInterface;
-use Pollen\Support\Filesystem;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagAwareTrait;
 use Pollen\Support\Exception\ManagerRuntimeException;
 use Pollen\Support\Proxy\ContainerProxy;
+use Pollen\Routing\Exception\NotFoundException;
 use Psr\Container\ContainerInterface as Container;
 
 class PartialManager implements PartialManagerInterface
 {
     use BootableTrait;
     use ConfigBagAwareTrait;
+    use ResourcesAwareTrait;
     use ContainerProxy;
     use RouterProxy;
 
@@ -92,12 +92,6 @@ class PartialManager implements PartialManagerInterface
     protected $driverDefinitions = [];
 
     /**
-     * Chemin vers le répertoire des ressources.
-     * @var string|null
-     */
-    protected $resourcesBaseDir;
-
-    /**
      * Route de traitement des requêtes XHR.
      * @var RouteInterface|null
      */
@@ -114,6 +108,8 @@ class PartialManager implements PartialManagerInterface
         if ($container !== null) {
             $this->setContainer($container);
         }
+
+        $this->setResourcesBaseDir(dirname(__DIR__) . '/resources');
 
         if ($this->config('boot_enabled', true)) {
             $this->boot();
@@ -195,7 +191,7 @@ class PartialManager implements PartialManagerInterface
         if (!$driver->getAlias()) {
             $driver->setAlias($alias);
         }
-        $params = array_merge($driver->defaultParams(), $this->config("driver.{$alias}", []), $params);
+        $params = array_merge($driver->defaultParams(), $this->config("driver.$alias", []), $params);
 
         $driver->setIndex($index)->setId($id)->setParams($params);
         $driver->boot();
@@ -274,39 +270,15 @@ class PartialManager implements PartialManagerInterface
     /**
      * @inheritDoc
      */
-    public function resources(?string $path = null): string
-    {
-        if ($this->resourcesBaseDir === null) {
-            $this->resourcesBaseDir = Filesystem::normalizePath(realpath(dirname(__DIR__) . '/resources/'));
-
-            if (!file_exists($this->resourcesBaseDir)) {
-                throw new RuntimeException('Partial ressources directory unreachable');
-            }
-        }
-
-        return is_null($path) ? $this->resourcesBaseDir : $this->resourcesBaseDir . Filesystem::normalizePath($path);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setResourcesBaseDir(string $resourceBaseDir): PartialManagerInterface
-    {
-        $this->resourcesBaseDir = Filesystem::normalizePath($resourceBaseDir);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function xhrResponseDispatcher(string $partial, string $controller, ...$args): ResponseInterface
     {
         try {
             $driver = $this->get($partial);
         } catch (Exception $e) {
             throw new NotFoundException(
-                sprintf('PartialDriver [%s] return exception : %s', $partial, $e->getMessage())
+                sprintf('PartialDriver [%s] return exception : %s', $partial, $e->getMessage()),
+                'PartialDriver Error',
+                $e
             );
         }
 
@@ -315,13 +287,16 @@ class PartialManager implements PartialManagerInterface
                 return $driver->{$controller}(...$args);
             } catch (Exception $e) {
                 throw new NotFoundException(
-                    sprintf('PartialDriver [%s] Controller [%s] call return exception', $controller, $partial)
+                    sprintf('PartialDriver [%s] Controller [%s] call return exception', $controller, $partial),
+                    'PartialDriver Error',
+                    $e
                 );
             }
         }
 
         throw new NotFoundException(
-            sprintf('PartialDriver [%s] unreachable', $partial)
+            sprintf('PartialDriver [%s] unreachable', $partial),
+            'PartialDriver Error'
         );
     }
 }

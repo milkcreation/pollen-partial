@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Pollen\Partial;
 
 use Closure;
-use League\Route\Http\Exception\NotFoundException;
 use Pollen\Http\ResponseInterface;
 use Pollen\Support\Concerns\BootableTraitInterface;
 use Pollen\Support\Concerns\ConfigBagAwareTraitInterface;
+use Pollen\Support\Concerns\ResourcesAwareTraitInterface;
 use Pollen\Support\Proxy\ContainerProxyInterface;
 use Pollen\Support\Proxy\RouterProxyInterface;
+use Pollen\Routing\Exception\NotFoundException;
 
 interface PartialManagerInterface extends
     BootableTraitInterface,
     ConfigBagAwareTraitInterface,
+    ResourcesAwareTraitInterface,
     ContainerProxyInterface,
     RouterProxyInterface
 {
@@ -71,24 +73,6 @@ interface PartialManagerInterface extends
      * @return static
      */
     public function registerDefaultDrivers(): PartialManagerInterface;
-
-    /**
-     * Chemin absolu vers une ressources (fichier|répertoire).
-     *
-     * @param string|null $path Chemin relatif vers la ressource.
-     *
-     * @return string
-     */
-    public function resources(?string $path = null): string;
-
-    /**
-     * Définition du chemin absolu vers le répertoire des ressources.
-     *
-     * @var string $resourceBaseDir
-     *
-     * @return static
-     */
-    public function setResourcesBaseDir(string $resourceBaseDir): PartialManagerInterface;
 
     /**
      * Répartiteur de traitement d'une requête XHR.
