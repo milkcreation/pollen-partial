@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Response as SfResponse;
-use tiFy\Contracts\Routing\Route;
-use tiFy\Http\Response;
+use Pollen\Http\Response;
+use Pollen\Http\ResponseInterface;
+use Pollen\Support\Proxy\EncrypterProxy;
+use Pollen\Support\Proxy\RouterProxy;
+use Pollen\Routing\RouteInterface;
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
+use Pollen\Support\ParamsBag;
+use Pollen\Validation\Validator as v;
 use tiFy\Support\MimeTypes;
-use tiFy\Support\ParamsBag;
-use tiFy\Support\Proxy\Crypt;
-use tiFy\Support\Proxy\Router;
 use tiFy\Support\Proxy\Storage;
 use tiFy\Support\Proxy\Url;
-use tiFy\Validation\Validator as v;
 
 class DownloaderDriver extends PartialDriver implements DownloaderDriverInterface
 {
+    use EncrypterProxy;
+    use RouterProxy;
+
     /**
      * Url de traitement de requête HTTP.
      * @var Route|string
@@ -50,7 +52,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
                 /**
                  * @var string $content Contenu d'affichage HTML du déclencheur de téléchargement.
                  */
-                'content' => __('Télécharger', 'tify'),
+                'content' => 'Télécharger',
                 /**
                  * @var string $src Fichier à télécharger. Chemin absolu|relatif au basedir|Url du site.
                  */
@@ -73,7 +75,8 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
      */
     public function getUrl(...$params): string
     {
-        return $this->url instanceof Route ? (string)$this->url->getUrl($params) : $this->url;
+        return $this->url instanceof RouteInterface
+            ? (string)$this->router()->getRouteUrl($this->url, $params) : $this->url;
     }
 
     /**
@@ -93,7 +96,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
             )
         );
 
-        $url = $this->getUrl(Crypt::encrypt($path));
+        $url = $this->getUrl($this->encrypt($path));
         if ($this->get('tag', 'a') === 'a') {
             $this->set('attrs.href', $url);
         } else {
@@ -118,7 +121,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
     public function setUrl(?string $url = null): DownloaderDriverInterface
     {
         $this->url = is_null($url)
-            ? Router::get(md5($this->getAlias()) . '/{path}', [$this, 'getResponse']) : $url;
+            ? $this->router()->get(md5($this->getAlias()) . '/{path}', [$this, 'getResponse']) : $url;
 
         return $this;
     }
@@ -130,18 +133,18 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
      */
     public function getFilename(...$args): string
     {
-        if ($decrypt = Crypt::decrypt((string)$args[0])) {
-            $var = (new ParamsBag())->set(json_decode(base64_decode($decrypt), true));
+        if ($decrypt = $this->decrypt((string)$args[0])) {
+            $var = new ParamsBag(json_decode(base64_decode($decrypt), true));
         } else {
             throw new Exception(
-                __('ERREUR SYSTEME : Impossible de récupérer les données de téléchargement du fichier.', 'tify')
+                'ERREUR SYSTEME : Impossible de récupérer les données de téléchargement du fichier.'
             );
         }
 
         $src = $var->get('src');
         if (!is_string($src)) {
             throw new Exception(
-                __('Téléchargement impossible, la fichier source n\'est pas valide.', 'tify')
+                'Téléchargement impossible, la fichier source n\'est pas valide.'
             );
         } elseif (v::url()->validate(dirname($src))) {
             $path = Url::rel($src);
@@ -155,7 +158,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
             $filename = $var->get('basedir') . $path;
         } else {
             throw new Exception(
-                __('Téléchargement impossible, le fichier n\'est pas disponible.', 'tify')
+                'Téléchargement impossible, le fichier n\'est pas disponible.'
             );
         }
 
@@ -166,7 +169,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
 
         if (!MimeTypes::inAllowedType($filename, $types)) {
             throw new Exception(
-                __('Téléchargement impossible, ce type de fichier n\'est pas autorisé.', 'tify')
+                'Téléchargement impossible, ce type de fichier n\'est pas autorisé.'
             );
         }
 
@@ -176,7 +179,7 @@ class DownloaderDriver extends PartialDriver implements DownloaderDriverInterfac
     /**
      * @inheritDoc
      */
-    public function getResponse(string $path): SfResponse
+    public function getResponse(string $path): ResponseInterface
     {
         try {
             $filename = $this->getFilename($path);

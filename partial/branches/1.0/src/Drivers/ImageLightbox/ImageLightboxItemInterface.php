@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\ImageLightbox;
 
-use tiFy\Contracts\Support\ParamsBag;
+use Pollen\Support\ParamsBagInterface;
 
-interface ImageLightboxItemInterface extends ParamsBag
+interface ImageLightboxItemInterface extends ParamsBagInterface
 {
     /**
      * Récupération des attributs HTML du lien.

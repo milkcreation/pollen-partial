@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Closure;
+use Pollen\Http\JsonResponse;
+use Pollen\Http\ResponseInterface;
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
-use tiFy\Support\ParamsBag;
-use tiFy\Support\Proxy\Request;
+use Pollen\Support\ParamsBag;
 
 class ModalDriver extends PartialDriver implements ModalDriverInterface
 {
@@ -217,7 +217,7 @@ class ModalDriver extends PartialDriver implements ModalDriverInterface
      */
     public function trigger($attrs = []): string
     {
-        $params = (new ParamsBag())->set(array_merge([
+        $params = new ParamsBag(array_merge([
             'tag'     => 'a',
             'attrs'   => [],
             'content' => '',
@@ -231,7 +231,7 @@ class ModalDriver extends PartialDriver implements ModalDriverInterface
 
         $params->set([
             'attrs.data-control' => 'modal.trigger',
-            'attrs.data-target'  => "{$this->get('attrs.data-id')}",
+            'attrs.data-target'  => (string)$this->get('attrs.data-id', ''),
         ]);
 
         if ($options = $params->pull('options')) {
@@ -252,16 +252,17 @@ class ModalDriver extends PartialDriver implements ModalDriverInterface
     /**
      * @inheritdoc
      */
-    public function xhrResponse(...$args): array
+    public function xhrResponse(...$args): ResponseInterface
     {
-        $viewer = Request::input('viewer', []);
+        $viewer = $this->httpRequest()->input('viewer', []);
 
         foreach ($viewer as $key => $value) {
             $this->view()->params([$key => $value]);
         }
-        return [
+
+        return new JsonResponse([
             'success' => true,
             'data'    => $this->view('ajax-content'),
-        ];
+        ]);
     }
 }

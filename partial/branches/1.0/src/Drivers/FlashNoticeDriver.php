@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
-use tiFy\Support\Proxy\Session;
+use Pollen\Support\Proxy\SessionProxy;
 
 class FlashNoticeDriver extends PartialDriver implements FlashNoticeDriverInterface
 {
+    use SessionProxy;
     /**
      * @inheritDoc
      */
@@ -17,7 +17,7 @@ class FlashNoticeDriver extends PartialDriver implements FlashNoticeDriverInterf
     {
         $key = ($namespace = $this->get('namespace')) ? "{$namespace}-{$type}" : $type;
 
-        Session::flash([$key => compact('attrs', 'message', 'type')]);
+        $this->session()->flash([$key => compact('attrs', 'message', 'type')]);
 
         return $this;
     }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
- * @var tiFy\Partial\Drivers\Tab\TabFactoryInterface[] $items
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
+ * @var Pollen\Partial\Drivers\Tab\TabFactoryInterface[] $items
  */
 ?>
 <?php $this->before(); ?>

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Exception;
+use Pollen\Http\ResponseInterface;
 use Pollen\Partial\PartialDriverInterface;
-use Symfony\Component\HttpFoundation\Response as Response;
 
 interface DownloaderDriverInterface extends PartialDriverInterface
 {
     /**
      * Récupération de l'url de requête HTTP.
      *
-     * @param array ...$params Liste des paramètres optionnels de formatage de l'url.
+     * @param mixed ...$params Liste des paramètres optionnels de formatage de l'url.
      *
      * @return string
      */
@@ -31,7 +31,7 @@ interface DownloaderDriverInterface extends PartialDriverInterface
     /**
      * Récupération du chemin absolu du fichier à téléchargé basé sur une liste d'arguments.
      *
-     * @param array ...$args Liste des arguments de récupération du chemin absolu.
+     * @param mixed ...$args Liste des arguments de récupération du chemin absolu.
      *
      * @return string
      *
@@ -44,7 +44,7 @@ interface DownloaderDriverInterface extends PartialDriverInterface
      *
      * @param string $path
      *
-     * @return Response
+     * @return ResponseInterface
      */
-    public function getResponse(string $path): Response;
+    public function getResponse(string $path): ResponseInterface;
 }

@@ -7,8 +7,7 @@ namespace Pollen\Partial\Drivers;
 use Pollen\Partial\Drivers\ImageLightbox\ImageLightboxItem;
 use Pollen\Partial\Drivers\ImageLightbox\ImageLightboxItemInterface;
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
-use tiFy\Validation\Validator as v;
+use Pollen\Validation\Validator as v;
 
 /**
  * @see https://github.com/marekdedic/imagelightbox

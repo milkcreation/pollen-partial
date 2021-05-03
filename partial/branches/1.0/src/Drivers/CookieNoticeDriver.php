@@ -6,26 +6,29 @@ namespace Pollen\Partial\Drivers;
 
 use Closure;
 use Exception;
-use tiFy\Contracts\Cookie\Cookie as CookieContract;
+use Pollen\Cookie\CookieInterface;
+use Pollen\Http\JsonResponse;
+use Pollen\Http\ResponseInterface;
 use Pollen\Partial\PartialDriver;
-use tiFy\Support\Proxy\Cookie;
-use tiFy\Support\Proxy\Request;
+use Pollen\Support\Proxy\CookieProxy;
 
 class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInterface
 {
+    use CookieProxy;
+
     /**
      * Instance du cookie associé.
-     * @var CookieContract|null
+     * @var CookieInterface|null
      */
     protected $cookie;
 
     /**
      * @inheritDoc
      */
-    public function cookie(): CookieContract
+    public function getCookie(): CookieInterface
     {
         if (is_null($this->cookie)) {
-            $this->cookie = Cookie::make($this->getId(), array_merge($this->get('cookie', [])));
+            $this->cookie = $this->cookie()->make($this->getId(), array_merge($this->get('cookie', [])));
         }
 
         return $this->cookie;
@@ -43,7 +46,6 @@ class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInte
             'content' => '<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>',
             /**
              * @var array $cookie Liste des paramètre de cookie.
-             * @see \tiFy\Cookie\Cookie
              */
             'cookie'  => [],
             /**
@@ -69,7 +71,7 @@ class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInte
         $content = $this->get('content');
         $this->set('content', $content instanceof Closure ? call_user_func($content) : $content);
 
-        if ($this->cookie()->get()) {
+        if ($this->getCookie()->httpValue()) {
             $this->set('attrs.aria-hidden', 'true');
         }
 
@@ -122,19 +124,21 @@ class CookieNoticeDriver extends PartialDriver implements CookieNoticeDriverInte
     /**
      * @inheritDoc
      */
-    public function xhrResponse(...$args): array
+    public function xhrResponse(...$args): ResponseInterface
     {
-        $id = Request::input('_id') ?: 'test';
+        $id = $this->httpRequest()->input('_id') ?: 'test';
 
         try {
-            $cookie = Cookie::make($id, Request::input('_cookie', []))->set('1');
+            $cookie = $this->cookie()->make(
+                $id, array_merge($this->httpRequest()->input('_cookie', []), ['value' => '1'])
+            );
 
-            return [
+            return new JsonResponse([
                 'success' => true,
                 'data' => $cookie->getName()
-            ];
+            ]);
         } catch (Exception $e) {
-            return ['success' => false, 'data' => $e->getMessage()];
+            return new JsonResponse(['success' => false, 'data' => $e->getMessage()]);
         }
     }
 }
