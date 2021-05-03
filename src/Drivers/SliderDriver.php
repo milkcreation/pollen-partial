@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Pollen\Partial\PartialDriver;
-use Pollen\Partial\PartialDriverInterface;
-use tiFy\Validation\Validator as v;
+use Pollen\Validation\Validator as v;
 
 class SliderDriver extends PartialDriver implements SliderDriverInterface
 {
@@ -44,12 +43,14 @@ class SliderDriver extends PartialDriver implements SliderDriverInterface
         $items = $this->get('items', []);
         foreach ($items as &$item) {
             if (is_callable($item)) {
-                $item = call_user_func($item);
+                $item = $item();
             } elseif (is_array($item)) {
+                continue;
             } elseif (v::url()->validate($item)) {
                 $item = "<img src=\"{$item}\" alt=\"\"/>";
             }
         }
+        unset($item);
 
         $this->set([
             'items'              => $items,

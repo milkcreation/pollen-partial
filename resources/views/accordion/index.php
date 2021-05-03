@@ -1,7 +1,7 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
- * @var tiFy\Partial\Drivers\Accordion\AccordionCollectionInterface $items
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
+ * @var Pollen\Partial\Drivers\Accordion\AccordionCollectionInterface $items
  */
 ?>
 <?php $this->before(); ?>

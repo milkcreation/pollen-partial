@@ -1,6 +1,6 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
  */
 ?>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec nibh arcu. In laoreet justo a aliquet vulputate.

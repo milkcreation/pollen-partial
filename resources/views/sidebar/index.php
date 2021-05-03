@@ -1,7 +1,7 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
- * @var tiFy\Partial\Drivers\Sidebar\SidebarItem[] $items
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
+ * @var Pollen\Partial\Drivers\Sidebar\SidebarItem[] $items
  */
 ?>
 <?php $this->before(); ?>

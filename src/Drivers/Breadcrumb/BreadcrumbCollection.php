@@ -6,10 +6,12 @@ namespace Pollen\Partial\Drivers\Breadcrumb;
 
 use Illuminate\Support\Collection;
 use Pollen\Partial\Drivers\BreadcrumbDriverInterface;
-use tiFy\Support\Proxy\Partial;
+use Pollen\Support\Proxy\PartialProxy;
 
 class BreadcrumbCollection implements BreadcrumbCollectionInterface
 {
+    use PartialProxy;
+
     /**
      * Liste des éléments déclarés.
      * @var array
@@ -119,7 +121,7 @@ class BreadcrumbCollection implements BreadcrumbCollectionInterface
         $attrs['class'] = sprintf($attrs['class'] ?? '%s', 'Breadcrumb-itemContent');
 
         if ($url) {
-            $render = Partial::get('tag', [
+            $render = $this->partial()->get('tag', [
                 'attrs'   => array_merge($attrs, [
                     'href' => $url,
                 ]),
@@ -127,7 +129,7 @@ class BreadcrumbCollection implements BreadcrumbCollectionInterface
                 'tag'     => 'a',
             ])->render();
         } else {
-            $render = Partial::get('tag', [
+            $render = $this->partial()->get('tag', [
                 'attrs'   => $attrs,
                 'content' => $content,
                 'tag'     => 'span',
@@ -142,7 +144,10 @@ class BreadcrumbCollection implements BreadcrumbCollectionInterface
      */
     public function getUrl($url, ?string $default = '#'): ?string
     {
-        return is_string($url) ? $url : ($url ? $default : null);
+       if (is_string($url)) {
+           return $url;
+       }
+       return $url ? $default : null;
     }
 
     /**
@@ -191,7 +196,7 @@ class BreadcrumbCollection implements BreadcrumbCollectionInterface
             'tag' => 'li',
         ], $wrapper, ['content' => $item['render'] ?? '']);
 
-        return Partial::get('tag', $tag)->render();
+        return $this->partial()->get('tag', $tag)->render();
     }
 
     /**

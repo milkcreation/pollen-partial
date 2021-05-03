@@ -10,23 +10,23 @@ use InvalidArgumentException;
 use Pollen\Support\Concerns\ResourcesAwareTrait;
 use Pollen\Support\Proxy\RouterProxy;
 use Pollen\Http\ResponseInterface;
-//use Pollen\Partial\Drivers\AccordionDriver;
-//use Pollen\Partial\Drivers\BreadcrumbDriver;
+use Pollen\Partial\Drivers\AccordionDriver;
+use Pollen\Partial\Drivers\BreadcrumbDriver;
 use Pollen\Partial\Drivers\BurgerButtonDriver;
-//use Pollen\Partial\Drivers\CookieNoticeDriver;
-//use Pollen\Partial\Drivers\CurtainMenuDriver;
-//use Pollen\Partial\Drivers\DropdownDriver;
-//use Pollen\Partial\Drivers\DownloaderDriver;
-//use Pollen\Partial\Drivers\FlashNoticeDriver;
-//use Pollen\Partial\Drivers\GridTableDriver;
+use Pollen\Partial\Drivers\CookieNoticeDriver;
+use Pollen\Partial\Drivers\CurtainMenuDriver;
+use Pollen\Partial\Drivers\DropdownDriver;
+use Pollen\Partial\Drivers\DownloaderDriver;
+use Pollen\Partial\Drivers\FlashNoticeDriver;
+use Pollen\Partial\Drivers\GridTableDriver;
 use Pollen\Partial\Drivers\HolderDriver;
-//use Pollen\Partial\Drivers\ImageLightboxDriver;
-//use Pollen\Partial\Drivers\MenuDriver;
-//use Pollen\Partial\Drivers\ModalDriver;
+use Pollen\Partial\Drivers\ImageLightboxDriver;
+use Pollen\Partial\Drivers\MenuDriver;
+use Pollen\Partial\Drivers\ModalDriver;
 use Pollen\Partial\Drivers\NoticeDriver;
 use Pollen\Partial\Drivers\ProgressDriver;
-//use Pollen\Partial\Drivers\SidebarDriver;
-//use Pollen\Partial\Drivers\SliderDriver;
+use Pollen\Partial\Drivers\SidebarDriver;
+use Pollen\Partial\Drivers\SliderDriver;
 use Pollen\Partial\Drivers\SpinnerDriver;
 use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
@@ -57,23 +57,23 @@ class PartialManager implements PartialManagerInterface
      * @var array
      */
     private $defaultDrivers = [
-        //'accordion'      => AccordionDriver::class,
-        //'breadcrumb'     => BreadcrumbDriver::class,
+        'accordion'      => AccordionDriver::class,
+        'breadcrumb'     => BreadcrumbDriver::class,
         'burger-button'  => BurgerButtonDriver::class,
-        //'cookie-notice'  => CookieNoticeDriver::class,
-        //'curtain-menu'   => CurtainMenuDriver::class,
-        //'dropdown'       => DropdownDriver::class,
-        //'downloader'     => DownloaderDriver::class,
-        //'flash-notice'   => FlashNoticeDriver::class,
-        //'grid-table'          => GridTableDriver::class,
+        'cookie-notice'  => CookieNoticeDriver::class,
+        'curtain-menu'   => CurtainMenuDriver::class,
+        'dropdown'       => DropdownDriver::class,
+        'downloader'     => DownloaderDriver::class,
+        'flash-notice'   => FlashNoticeDriver::class,
+        'grid-table'     => GridTableDriver::class,
         'holder'         => HolderDriver::class,
-        //'image-lightbox' => ImageLightboxDriver::class,
-        //'menu'           => MenuDriver::class,
-        //'modal'          => ModalDriver::class,
+        'image-lightbox' => ImageLightboxDriver::class,
+        'menu'           => MenuDriver::class,
+        'modal'          => ModalDriver::class,
         'notice'         => NoticeDriver::class,
         'progress'       => ProgressDriver::class,
-        //'sidebar'        => SidebarDriver::class,
-        //'slider'         => SliderDriver::class,
+        'sidebar'        => SidebarDriver::class,
+        'slider'         => SliderDriver::class,
         'spinner'        => SpinnerDriver::class,
         'tab'            => TabDriver::class,
         'tag'            => TagDriver::class,
@@ -159,7 +159,6 @@ class PartialManager implements PartialManagerInterface
             $this->registerDefaultDrivers();
 
             $this->setBooted();
-
             //events()->trigger('partial.booted', [$this]);
         }
         return $this;
@@ -170,7 +169,7 @@ class PartialManager implements PartialManagerInterface
      */
     public function get(string $alias, $idOrParams = null, ?array $params = []): ?PartialDriverInterface
     {
-        if(is_array($idOrParams)) {
+        if (is_array($idOrParams)) {
             $params = (array)$idOrParams;
             $id = null;
         } else {
@@ -242,8 +241,11 @@ class PartialManager implements PartialManagerInterface
     /**
      * @inheritDoc
      */
-    public function register(string $alias, $driverDefinition, ?Closure $registerCallback = null): PartialManagerInterface
-    {
+    public function register(
+        string $alias,
+        $driverDefinition,
+        ?Closure $registerCallback = null
+    ): PartialManagerInterface {
         /*if (isset($this->driverDefinitions[$alias])) {
             throw new RuntimeException(sprintf('Another PartialDriver with alias [%s] already registered', $alias));
         }*/

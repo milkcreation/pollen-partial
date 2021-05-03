@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Dropdown;
 
-use tiFy\Contracts\Support\ParamsBag;
+use Pollen\Support\ParamsBagInterface;
 
-interface DropdownItemInterface extends ParamsBag
+interface DropdownItemInterface extends ParamsBagInterface
 {
     /**
      * Résolution de sortie du controleur sous la forme d'une chaîne de caractères.

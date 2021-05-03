@@ -1,6 +1,6 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
  */
 ?>
 <div class="sk-rect sk-rect1"></div>

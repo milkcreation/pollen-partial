@@ -1,6 +1,6 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
  */
 ?>
 <?php if (is_array($this->get('content'))) : ?>

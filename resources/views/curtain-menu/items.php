@@ -1,9 +1,9 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
- * @var tiFy\Partial\Drivers\CurtainMenu\CurtainMenuItemInterface[] $items Liste des éléments.
- * @var int $depth Niveau de profondeur de la liste des éléments.
- * @var tiFy\Partial\Drivers\CurtainMenu\CurtainMenuItemInterface $parent
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
+ * @var Pollen\Partial\Drivers\CurtainMenu\CurtainMenuItemInterface[] $items
+ * @var Pollen\Partial\Drivers\CurtainMenu\CurtainMenuItemInterface $parent
+ * @var int $depth
  */
 ?>
 <?php if ($items = $this->get('items')) : ?>

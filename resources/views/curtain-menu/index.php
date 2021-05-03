@@ -1,7 +1,7 @@
 <?php
 /**
- * @var tiFy\Partial\PartialViewInterface $this
- * @var tiFy\Partial\Drivers\CurtainMenu\CurtainMenuCollectionInterface $items
+ * @var Pollen\Partial\PartialViewLoaderInterface $this
+ * @var Pollen\Partial\Drivers\CurtainMenu\CurtainMenuCollectionInterface $items
  */
 ?>
 <?php $this->before(); ?>
