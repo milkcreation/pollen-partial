@@ -187,8 +187,8 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function xhrResponse(...$args): ResponseInterface
     {
-        if (($sessionName = Request::input('session')) && $store = Session::registerStore($sessionName)) {
-            $store->put('active', Request::input('active'));
+        if (($sessionName = $this->httpRequest()->input('session')) && ($store = Session::registerStore($sessionName))) {
+            $store->put('active', $this->httpRequest()->input('active'));
 
             return new JsonResponse(['success' => true]);
         }
