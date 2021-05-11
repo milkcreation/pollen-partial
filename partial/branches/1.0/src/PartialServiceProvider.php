@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Partial;
 
-use Pollen\Container\BaseServiceProvider;
+use Pollen\Container\BootableServiceProvider;
 use Pollen\Partial\Drivers\AccordionDriver;
 use Pollen\Partial\Drivers\BreadcrumbDriver;
 use Pollen\Partial\Drivers\BurgerButtonDriver;
@@ -26,7 +26,7 @@ use Pollen\Partial\Drivers\SpinnerDriver;
 use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
 
-class PartialServiceProvider extends BaseServiceProvider
+class PartialServiceProvider extends BootableServiceProvider
 {
     /**
      * @var string[]
