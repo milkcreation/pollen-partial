@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Sidebar;
 
-use tiFy\Support\Callback;
+use Closure;
 use Pollen\Support\ParamsBag;
 
 class SidebarItem extends ParamsBag
@@ -22,8 +22,7 @@ class SidebarItem extends ParamsBag
     public function __construct(string $name, array $attrs = [])
     {
         $this->name = $name;
-        $this->set($attrs);
-        $this->parse();
+        parent::__construct($attrs);
     }
 
     /**
@@ -35,7 +34,7 @@ class SidebarItem extends ParamsBag
     {
         $content = $this->get('content');
 
-        return Callback::make($content) ?: $content;
+        return $content instanceof Closure ? $content() : $content;
     }
 
     /**
