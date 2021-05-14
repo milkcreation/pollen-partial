@@ -13,10 +13,10 @@ use Pollen\Routing\RouteInterface;
 use Pollen\Partial\PartialDriver;
 use Pollen\Support\ParamsBag;
 use Pollen\Validation\Validator as v;
-use tiFy\Support\MimeTypes;
-use tiFy\Support\Proxy\Storage;
-use tiFy\Support\Proxy\Url;
 
+/**
+ * @todo
+ */
 class DownloaderDriver extends PartialDriver implements DownloaderDriverInterface
 {
     use EncrypterProxy;
