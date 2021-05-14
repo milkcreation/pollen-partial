@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Dropdown;
 
-use tiFy\Contracts\Support\Collection;
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
 use Pollen\Partial\Drivers\DropdownDriverInterface;
 
-interface DropdownCollectionInterface extends Collection
+interface DropdownCollectionInterface extends ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * Définition du controleur de controleur d'affichage associé.

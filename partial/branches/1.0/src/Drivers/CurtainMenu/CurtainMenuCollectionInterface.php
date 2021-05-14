@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers\CurtainMenu;
 
 use Pollen\Partial\Drivers\CurtainMenuDriverInterface;
-use tiFy\Contracts\Support\Collection;
 
+/**
+ * @todo
+ */
 interface CurtainMenuCollectionInterface extends Collection
 {
     /**
