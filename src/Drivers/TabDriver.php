@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pollen\Partial\Drivers;
 
 use Exception;
+use Pollen\Http\UrlHelper;
 use Pollen\Http\JsonResponse;
 use Pollen\Http\ResponseInterface;
 use Pollen\Partial\Drivers\Tab\TabCollection;
@@ -72,9 +73,9 @@ class TabDriver extends PartialDriver implements TabDriverInterface
     protected function getActive(): string
     {
         if (!$active = $this->get('active')) {
-            $sessionName = md5(Url::current()->path() . $this->getId());
-            if ($this->get('ajax') && ($store = $this->session()->registerStore($sessionName))) {
-                $active = $store->get('active', '');
+            $sessionName = md5((new UrlHelper())->getAbsoluteUrl() . $this->getId());
+            if ($this->get('ajax') && ($bag = $this->session()->addAttributeKeyBag($sessionName))) {
+                $active = $bag->get('active', '');
                 $this->set('attrs.data-options.ajax.data.session', $sessionName);
             }
         }
@@ -187,8 +188,8 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function xhrResponse(...$args): ResponseInterface
     {
-        if (($sessionName = $this->httpRequest()->input('session')) && ($store = Session::registerStore($sessionName))) {
-            $store->put('active', $this->httpRequest()->input('active'));
+        if (($sessionName = $this->httpRequest()->input('session')) && ($bag = $this->session()->addAttributeKeyBag($sessionName))) {
+            $bag->set('active', $this->httpRequest()->input('active'));
 
             return new JsonResponse(['success' => true]);
         }
