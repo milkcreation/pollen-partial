@@ -8,7 +8,7 @@ use Pollen\Http\ResponseInterface;
 use Pollen\Support\Concerns\ParamsBagDelegateTraitInterface;
 use Pollen\Support\Proxy\HttpRequestProxyInterface;
 use Pollen\Support\Proxy\PartialProxyInterface;
-use Pollen\View\ViewEngineInterface;
+use Pollen\View\ViewInterface;
 
 interface PartialDriverInterface extends
     HttpRequestProxyInterface,
@@ -155,11 +155,11 @@ interface PartialDriverInterface extends
     /**
      * Définition de l'instance du moteur d'affichage.
      *
-     * @param ViewEngineInterface $viewEngine
+     * @param ViewInterface $view
      *
      * @return static
      */
-    public function setViewEngine(ViewEngineInterface $viewEngine): PartialDriverInterface;
+    public function setView(ViewInterface $view): PartialDriverInterface;
 
     /**
      * Instance du gestionnaire de gabarits d'affichage ou rendu du gabarit d'affichage.
@@ -167,7 +167,7 @@ interface PartialDriverInterface extends
      * @param string|null $view Nom de qualification du gabarit.
      * @param array $data Liste des variables passées en argument.
      *
-     * @return ViewEngineInterface|string
+     * @return ViewInterface|string
      */
     public function view(?string $view = null, array $data = []);
 

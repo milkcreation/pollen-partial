@@ -10,9 +10,10 @@ use Pollen\Http\JsonResponse;
 use Pollen\Http\ResponseInterface;
 use Pollen\Partial\Drivers\Tab\TabCollection;
 use Pollen\Partial\Drivers\Tab\TabCollectionInterface;
-use Pollen\Partial\Drivers\Tab\TabViewLoader;
+use Pollen\Partial\Drivers\Tab\TabTemplate;
 use Pollen\Partial\PartialDriver;
 use Pollen\Support\Proxy\SessionProxy;
+use Pollen\View\Engines\Plates\PlatesViewEngine;
 
 class TabDriver extends PartialDriver implements TabDriverInterface
 {
@@ -20,9 +21,8 @@ class TabDriver extends PartialDriver implements TabDriverInterface
 
     /**
      * Collection des éléments déclaré.
-     * @var TabCollectionInterface
      */
-    private $tabCollection;
+    private ?TabCollectionInterface $tabCollection = null;
 
     /**
      * @inheritDoc
@@ -100,7 +100,7 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function getTabStyle(int $depth = 0): string
     {
-        return $this->get("rotation.{$depth}") ?: 'default';
+        return $this->get("rotation.$depth") ?: 'default';
     }
 
     /**
@@ -166,10 +166,15 @@ class TabDriver extends PartialDriver implements TabDriverInterface
      */
     public function view(?string $view = null, $data = [])
     {
-        if ($this->viewEngine === null) {
-            $viewEngine = parent::view();
-            $viewEngine->setLoader(TabViewLoader::class);
-            $this->viewEngine->setDelegateMixin('getTabStyle');
+        if ($this->view === null) {
+            parent::view();
+
+            $engine = $this->view->getEngine();
+            if ($engine instanceof PlatesViewEngine) {
+                $engine
+                    ->setTemplateClass(TabTemplate::class)
+                    ->setDelegateMixin('getTabStyle');
+            }
         }
 
         return parent::view($view, $data);

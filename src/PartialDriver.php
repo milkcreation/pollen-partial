@@ -14,8 +14,9 @@ use Pollen\Support\Proxy\HttpRequestProxy;
 use Pollen\Support\Html;
 use Pollen\Support\Proxy\PartialProxy;
 use Pollen\Support\Str;
-use Pollen\View\ViewEngine;
-use Pollen\View\ViewEngineInterface;
+use Pollen\View\View;
+use Pollen\View\Engines\Plates\PlatesViewEngine;
+use Pollen\View\ViewInterface;
 
 abstract class PartialDriver implements PartialDriverInterface
 {
@@ -26,34 +27,29 @@ abstract class PartialDriver implements PartialDriverInterface
 
     /**
      * Indice de l'instance dans le gestionnaire.
-     * @var int
      */
-    private $index = 0;
+    private int $index = 0;
 
     /**
      * Alias de qualification.
-     * @var string
      */
-    protected $alias = '';
+    protected string $alias = '';
 
     /**
      * Liste des attributs par défaut.
-     * @var array
      */
-    protected static $defaults = [];
+    protected static array $defaults = [];
 
     /**
      * Identifiant de qualification.
      * {@internal par défaut concaténation de l'alias et de l'indice.}
-     * @var string
      */
-    protected $id = '';
+    protected string $id = '';
 
     /**
      * Instance du moteur de gabarits d'affichage.
-     * @var ViewEngineInterface
      */
-    protected $viewEngine;
+    protected ?ViewInterface $view = null;
 
     /**
      * @param PartialManagerInterface $partialManager
@@ -106,7 +102,6 @@ abstract class PartialDriver implements PartialDriverInterface
             $this->parseParams();
 
             $this->setBooted();
-
             //events()->trigger('partial.driver.booted', [$this->getAlias(), $this]);
         }
     }
@@ -208,7 +203,7 @@ abstract class PartialDriver implements PartialDriverInterface
     {
         $base = $this->getBaseClass();
 
-        $default_class = "{$base} {$base}--" . $this->getIndex();
+        $default_class = "$base $base--" . $this->getIndex();
         if (!$this->has('attrs.class')) {
             $this->set('attrs.class', $default_class);
         } else {
@@ -281,9 +276,9 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function setViewEngine(ViewEngineInterface $viewEngine): PartialDriverInterface
+    public function setView(ViewInterface $view): PartialDriverInterface
     {
-        $this->viewEngine = $viewEngine;
+        $this->view = $view;
 
         return $this;
     }
@@ -293,9 +288,7 @@ abstract class PartialDriver implements PartialDriverInterface
      */
     public function view(?string $view = null, array $data = [])
     {
-        if (is_null($this->viewEngine)) {
-            $directory = null;
-            $overrideDir = null;
+        if ($this->view === null) {
             $default = $this->partial()->config('default.driver.viewer', []);
 
             $directory = $this->get('viewer.directory');
@@ -331,37 +324,45 @@ abstract class PartialDriver implements PartialDriverInterface
                 }
             }
 
-            $this->viewEngine = new ViewEngine();
-            if ($container = $this->partial()->getContainer()) {
-                $this->viewEngine->setContainer($container);
-            }
+            $this->view = View::createFromPlates(
+                function (PlatesViewEngine $platesViewEngine) use ($directory, $overrideDir) {
+                    $platesViewEngine
+                        ->setDelegate($this)
+                        ->setTemplateClass(PartialTemplate::class)
+                        ->setDirectory($directory);
 
-            $this->viewEngine->setDirectory($directory)->setDelegate($this)->setLoader(PartialViewLoader::class);
+                    if ($overrideDir !== null) {
+                        $platesViewEngine->setOverrideDir($overrideDir);
+                    }
 
-            if ($overrideDir !== null) {
-                $this->viewEngine->addFolder('_override_dir', $overrideDir, true);
-            }
+                    if ($container = $this->partial()->getContainer()) {
+                        $platesViewEngine->setContainer($container);
+                    }
 
-            $mixins = [
-                'after',
-                'attrs',
-                'before',
-                'content',
-                'getAlias',
-                'getId',
-                'getIndex'
-            ];
+                    $mixins = [
+                        'after',
+                        'attrs',
+                        'before',
+                        'content',
+                        'getAlias',
+                        'getId',
+                        'getIndex',
+                    ];
 
-            foreach($mixins as $mixin){
-                $this->viewEngine->setDelegateMixin($mixin);
-            }
+                    foreach ($mixins as $mixin) {
+                        $platesViewEngine->setDelegateMixin($mixin);
+                    }
+
+                    return $platesViewEngine;
+                }
+            );
         }
 
         if (func_num_args() === 0) {
-            return $this->viewEngine;
+            return $this->view;
         }
 
-        return $this->viewEngine->render($view, $data);
+        return $this->view->render($view, $data);
     }
 
     /**
@@ -374,8 +375,10 @@ abstract class PartialDriver implements PartialDriverInterface
      */
     public function xhrResponse(...$args): ResponseInterface
     {
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        return new JsonResponse(
+            [
+                'success' => true,
+            ]
+        );
     }
 }

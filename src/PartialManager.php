@@ -46,17 +46,13 @@ class PartialManager implements PartialManagerInterface
     use ContainerProxy;
     use RouterProxy;
 
-    /**
-     * Instance principale.
-     * @var static|null
-     */
-    private static $instance;
+    private static ?PartialManagerInterface $instance = null;
 
     /**
      * Définition des pilotes par défaut.
-     * @var array
+     * @var array<string, string>
      */
-    private $defaultDrivers = [
+    private array $defaultDrivers = [
         'accordion'      => AccordionDriver::class,
         'breadcrumb'     => BreadcrumbDriver::class,
         'burger-button'  => BurgerButtonDriver::class,
@@ -83,19 +79,19 @@ class PartialManager implements PartialManagerInterface
      * Liste des instance de pilote chargés.
      * @var PartialDriverInterface[][]
      */
-    private $drivers = [];
+    private array $drivers = [];
 
     /**
      * Liste des pilotes déclarés.
      * @var PartialDriverInterface[][]|Closure[][]|string[][]|array
      */
-    protected $driverDefinitions = [];
+    protected array $driverDefinitions = [];
 
     /**
      * Route de traitement des requêtes XHR.
      * @var RouteInterface|null
      */
-    protected $xhrRoute;
+    protected ?RouteInterface $xhrRoute;
 
     /**
      * @param array $config
@@ -111,9 +107,7 @@ class PartialManager implements PartialManagerInterface
 
         $this->setResourcesBaseDir(dirname(__DIR__) . '/resources');
 
-        if ($this->config('boot_enabled', true)) {
-            $this->boot();
-        }
+        $this->boot();
 
         if (!self::$instance instanceof static) {
             self::$instance = $this;
