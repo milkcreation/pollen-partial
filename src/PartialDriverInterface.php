@@ -8,12 +8,14 @@ use Pollen\Http\ResponseInterface;
 use Pollen\Support\Concerns\ParamsBagDelegateTraitInterface;
 use Pollen\Support\Proxy\HttpRequestProxyInterface;
 use Pollen\Support\Proxy\PartialProxyInterface;
+use Pollen\Support\Proxy\ViewProxyInterface;
 use Pollen\View\ViewInterface;
 
 interface PartialDriverInterface extends
     HttpRequestProxyInterface,
     ParamsBagDelegateTraitInterface,
-    PartialProxyInterface
+    PartialProxyInterface,
+    ViewProxyInterface
 {
     /**
      * Résolution de sortie de la classe en tant que chaîne de caractère.
@@ -151,25 +153,6 @@ interface PartialDriverInterface extends
      * @return static
      */
     public function setIndex(int $index): PartialDriverInterface;
-
-    /**
-     * Définition de l'instance du moteur d'affichage.
-     *
-     * @param ViewInterface $view
-     *
-     * @return static
-     */
-    public function setView(ViewInterface $view): PartialDriverInterface;
-
-    /**
-     * Instance du gestionnaire de gabarits d'affichage ou rendu du gabarit d'affichage.
-     *
-     * @param string|null $view Nom de qualification du gabarit.
-     * @param array $data Liste des variables passées en argument.
-     *
-     * @return ViewInterface|string
-     */
-    public function view(?string $view = null, array $data = []);
 
     /**
      * Chemin absolu du répertoire des gabarits d'affichage.

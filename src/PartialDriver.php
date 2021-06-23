@@ -13,10 +13,10 @@ use Pollen\Support\Concerns\ParamsBagDelegateTrait;
 use Pollen\Support\Proxy\HttpRequestProxy;
 use Pollen\Support\Html;
 use Pollen\Support\Proxy\PartialProxy;
+use Pollen\Support\Proxy\ViewProxy;
 use Pollen\Support\Str;
-use Pollen\View\View;
+use Pollen\View\ViewManager;
 use Pollen\View\Engines\Plates\PlatesViewEngine;
-use Pollen\View\ViewInterface;
 
 abstract class PartialDriver implements PartialDriverInterface
 {
@@ -24,6 +24,7 @@ abstract class PartialDriver implements PartialDriverInterface
     use HttpRequestProxy;
     use ParamsBagDelegateTrait;
     use PartialProxy;
+    use ViewProxy;
 
     /**
      * Indice de l'instance dans le gestionnaire.
@@ -45,11 +46,6 @@ abstract class PartialDriver implements PartialDriverInterface
      * {@internal par défaut concaténation de l'alias et de l'indice.}
      */
     protected string $id = '';
-
-    /**
-     * Instance du moteur de gabarits d'affichage.
-     */
-    protected ?ViewInterface $view = null;
 
     /**
      * @param PartialManagerInterface $partialManager
@@ -276,17 +272,7 @@ abstract class PartialDriver implements PartialDriverInterface
     /**
      * @inheritDoc
      */
-    public function setView(ViewInterface $view): PartialDriverInterface
-    {
-        $this->view = $view;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function view(?string $view = null, array $data = [])
+    public function view(?string $name = null, array $data = [])
     {
         if ($this->view === null) {
             $default = $this->partial()->config('default.driver.viewer', []);
@@ -324,45 +310,37 @@ abstract class PartialDriver implements PartialDriverInterface
                 }
             }
 
-            $this->view = View::createFromPlates(
-                function (PlatesViewEngine $platesViewEngine) use ($directory, $overrideDir) {
-                    $platesViewEngine
-                        ->setDelegate($this)
-                        ->setTemplateClass(PartialTemplate::class)
-                        ->setDirectory($directory);
+            $viewEngine = new PlatesViewEngine();
 
-                    if ($overrideDir !== null) {
-                        $platesViewEngine->setOverrideDir($overrideDir);
-                    }
+            $viewEngine->setDelegate($this)
+                ->setTemplateClass(PartialTemplate::class)
+                ->setDirectory($directory);
 
-                    if ($container = $this->partial()->getContainer()) {
-                        $platesViewEngine->setContainer($container);
-                    }
+            if ($overrideDir !== null) {
+                $viewEngine->setOverrideDir($overrideDir);
+            }
 
-                    $mixins = [
-                        'after',
-                        'attrs',
-                        'before',
-                        'content',
-                        'getAlias',
-                        'getId',
-                        'getIndex',
-                    ];
+            $mixins = [
+                'after',
+                'attrs',
+                'before',
+                'content',
+                'getAlias',
+                'getId',
+                'getIndex',
+            ];
+            foreach ($mixins as $mixin) {
+                $viewEngine->setDelegateMixin($mixin);
+            }
 
-                    foreach ($mixins as $mixin) {
-                        $platesViewEngine->setDelegateMixin($mixin);
-                    }
-
-                    return $platesViewEngine;
-                }
-            );
+            $this->view = $this->viewManager()->createView($viewEngine);
         }
 
         if (func_num_args() === 0) {
             return $this->view;
         }
 
-        return $this->view->render($view, $data);
+        return $this->view->render($name, $data);
     }
 
     /**

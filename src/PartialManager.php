@@ -184,7 +184,7 @@ class PartialManager implements PartialManagerInterface
         if (!$driver->getAlias()) {
             $driver->setAlias($alias);
         }
-        $params = array_merge($driver->defaultParams(), $this->config("driver.$alias", []), $params);
+        $params = array_merge($driver->defaultParams(), $this->config("driver.$alias", []), $params ?: []);
 
         $driver->setIndex($index)->setId($id)->setParams($params);
         $driver->boot();
