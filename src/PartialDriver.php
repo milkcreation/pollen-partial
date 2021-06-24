@@ -15,7 +15,7 @@ use Pollen\Support\Html;
 use Pollen\Support\Proxy\PartialProxy;
 use Pollen\Support\Proxy\ViewProxy;
 use Pollen\Support\Str;
-use Pollen\View\ViewManager;
+use Pollen\View\ViewInterface;
 use Pollen\View\Engines\Plates\PlatesViewEngine;
 
 abstract class PartialDriver implements PartialDriverInterface
@@ -46,6 +46,11 @@ abstract class PartialDriver implements PartialDriverInterface
      * {@internal par défaut concaténation de l'alias et de l'indice.}
      */
     protected string $id = '';
+
+    /**
+     * Template view instance.
+     */
+    protected ?ViewInterface $view = null;
 
     /**
      * @param PartialManagerInterface $partialManager
@@ -312,8 +317,7 @@ abstract class PartialDriver implements PartialDriverInterface
 
             $viewEngine = new PlatesViewEngine();
 
-            $viewEngine->setDelegate($this)
-                ->setTemplateClass(PartialTemplate::class)
+            $viewEngine
                 ->setDirectory($directory);
 
             if ($overrideDir !== null) {
@@ -330,7 +334,7 @@ abstract class PartialDriver implements PartialDriverInterface
                 'getIndex',
             ];
             foreach ($mixins as $mixin) {
-                $viewEngine->setDelegateMixin($mixin);
+                $viewEngine->addFunction($mixin, [$this, $mixin]);
             }
 
             $this->view = $this->viewManager()->createView($viewEngine);

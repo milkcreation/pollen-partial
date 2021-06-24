@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Partial;
 
-use Pollen\View\Engines\Plates\PlatesPartialAwareTemplateTrait;
-use Pollen\View\Engines\Plates\PlatesTemplate;
+use Pollen\ViewExtends\PlatesTemplateInterface;
 
 /**
  * @method string after()
@@ -16,7 +15,6 @@ use Pollen\View\Engines\Plates\PlatesTemplate;
  * @method string getId()
  * @method string getIndex()
  */
-class PartialTemplate extends PlatesTemplate
+interface PartialTemplateInterface extends PlatesTemplateInterface
 {
-    use PlatesPartialAwareTemplateTrait;
 }
