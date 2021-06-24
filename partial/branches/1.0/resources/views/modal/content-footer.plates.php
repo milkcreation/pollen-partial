@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Partial\PartialTemplate $this
+ * @var Pollen\Partial\PartialTemplateInterface $this
  */
 ?>
 <button type="button" class="btn btn-secondary button-secondary" data-control="modal.close">

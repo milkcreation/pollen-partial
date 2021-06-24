@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Partial\PartialTemplate $this
+ * @var Pollen\Partial\PartialTemplateInterface $this
  */
 ?>
 <div class="Sidebar-footer" data-control="sidebar.footer">

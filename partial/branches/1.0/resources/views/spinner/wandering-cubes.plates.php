@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Partial\PartialTemplate $this
+ * @var Pollen\Partial\PartialTemplateInterface $this
  */
 ?>
 <div class="sk-cube sk-cube1"></div>

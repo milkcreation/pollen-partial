@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Partial\PartialTemplate $this
+ * @var Pollen\Partial\PartialTemplateInterface $this
  */
 ?>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec nibh arcu. In laoreet justo a aliquet vulputate.
