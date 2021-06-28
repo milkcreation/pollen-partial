@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Partial\PartialTemplateInterface $this
+ * @var Pollen\Partial\Drivers\Tab\TabTemplateInterface $this
  * @var Pollen\Partial\Drivers\Tab\TabFactoryInterface[] $items
  */
 ?>

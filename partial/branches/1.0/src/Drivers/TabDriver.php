@@ -10,10 +10,8 @@ use Pollen\Http\JsonResponse;
 use Pollen\Http\ResponseInterface;
 use Pollen\Partial\Drivers\Tab\TabCollection;
 use Pollen\Partial\Drivers\Tab\TabCollectionInterface;
-use Pollen\Partial\Drivers\Tab\TabTemplate;
 use Pollen\Partial\PartialDriver;
 use Pollen\Support\Proxy\SessionProxy;
-use Pollen\View\Engines\Plates\PlatesViewEngine;
 
 class TabDriver extends PartialDriver implements TabDriverInterface
 {
@@ -164,20 +162,15 @@ class TabDriver extends PartialDriver implements TabDriverInterface
     /**
      * @inheritDoc
      */
-    public function view(?string $view = null, $data = [])
+    public function view(?string $name = null, $data = [])
     {
         if ($this->view === null) {
             parent::view();
 
-            $engine = $this->view->getEngine();
-            if ($engine instanceof PlatesViewEngine) {
-                $engine
-                    ->setTemplateClass(TabTemplate::class)
-                    ->setDelegateMixin('getTabStyle');
-            }
+            $this->view->addExtension('getTabStyle', [$this, 'getTabStyle']);
         }
 
-        return parent::view($view, $data);
+        return parent::view($name, $data);
     }
 
     /**
