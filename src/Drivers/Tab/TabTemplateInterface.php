@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Pollen\Partial\Drivers\Tab;
 
-use Pollen\Partial\PartialTemplate;
+use Pollen\Partial\PartialTemplateInterface;
 
 /**
  * @method string getTabStyle(int $depth = 0)
  */
-class TabTemplate extends PartialTemplate
+interface TabTemplateInterface extends PartialTemplateInterface
 {
 }
