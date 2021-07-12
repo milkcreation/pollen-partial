@@ -26,7 +26,6 @@ use Pollen\Partial\Drivers\ModalDriver;
 use Pollen\Partial\Drivers\NoticeDriver;
 use Pollen\Partial\Drivers\ProgressDriver;
 use Pollen\Partial\Drivers\SidebarDriver;
-use Pollen\Partial\Drivers\SliderDriver;
 use Pollen\Partial\Drivers\SpinnerDriver;
 use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
@@ -69,7 +68,6 @@ class PartialManager implements PartialManagerInterface
         'notice'         => NoticeDriver::class,
         'progress'       => ProgressDriver::class,
         'sidebar'        => SidebarDriver::class,
-        'slider'         => SliderDriver::class,
         'spinner'        => SpinnerDriver::class,
         'tab'            => TabDriver::class,
         'tag'            => TagDriver::class,
