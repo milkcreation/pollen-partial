@@ -21,7 +21,6 @@ use Pollen\Partial\Drivers\ModalDriver;
 use Pollen\Partial\Drivers\NoticeDriver;
 use Pollen\Partial\Drivers\ProgressDriver;
 use Pollen\Partial\Drivers\SidebarDriver;
-use Pollen\Partial\Drivers\SliderDriver;
 use Pollen\Partial\Drivers\SpinnerDriver;
 use Pollen\Partial\Drivers\TabDriver;
 use Pollen\Partial\Drivers\TagDriver;
@@ -48,7 +47,6 @@ class PartialServiceProvider extends BootableServiceProvider
         NoticeDriver::class,
         ProgressDriver::class,
         SidebarDriver::class,
-        SliderDriver::class,
         SpinnerDriver::class,
         TabDriver::class,
         TagDriver::class,
@@ -169,12 +167,6 @@ class PartialServiceProvider extends BootableServiceProvider
             SidebarDriver::class,
             function () {
                 return new SidebarDriver($this->getContainer()->get(PartialManagerInterface::class));
-            }
-        );
-        $this->getContainer()->add(
-            SliderDriver::class,
-            function () {
-                return new SliderDriver($this->getContainer()->get(PartialManagerInterface::class));
             }
         );
         $this->getContainer()->add(
