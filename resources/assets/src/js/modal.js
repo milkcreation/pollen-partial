@@ -5,7 +5,7 @@ import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widget';
 import 'bootstrap/js/dist/util';
 import 'bootstrap/js/dist/modal';
-import '../../../observer/js/scripts';
+import MutationObserver from '@pollen-solutions/support/resources/assets/src/js/mutation-observer'
 
 jQuery(function ($) {
   $.widget('tify.tifyModal', {
@@ -375,15 +375,13 @@ jQuery(function ($) {
 
   $(document).ready(function () {
     $('[data-control="modal"]').tifyModal();
-
-    $.tify.observe('[data-control="modal"]', function (i, target) {
-      $(target).tifyModal();
-    });
-
     $('[data-control="modal.trigger"]').tifyModalTrigger();
 
-    $.tify.observe('[data-control="modal.trigger"]', function (i, target) {
+    MutationObserver('[data-control="modal"]', function (target) {
+      $(target).tifyModal();
+    })
+    MutationObserver('[data-control="modal.trigger"]', function (target) {
       $(target).tifyModalTrigger();
-    });
+    })
   });
 });

@@ -1,8 +1,8 @@
 /* global wp */
-'use strict';
+'use strict'
 
-import jQuery from 'jquery';
-import '../../../observer/js/scripts';
+import jQuery from 'jquery'
+import MutationObserver from '@pollen-solutions/support/resources/assets/src/js/mutation-observer'
 
 jQuery(function ($) {
   $.widget('tify.tifyMediaLibrary', {
@@ -10,13 +10,13 @@ jQuery(function ($) {
     options: {},
     // Instanciation de l'élément.
     _create: function () {
-      this.instance = this;
+      this.instance = this
 
-      this.el = this.element;
+      this.el = this.element
 
-      this._initOptions();
-      this._initControls();
-      this._initEvents();
+      this._initOptions()
+      this._initControls()
+      this._initEvents()
     },
     // INTIALISATIONS.
     // -----------------------------------------------------------------------------------------------------------------
@@ -26,47 +26,47 @@ jQuery(function ($) {
           true,
           this.options,
           this.el.data('options') && $.parseJSON(decodeURIComponent(this.el.data('options'))) || {}
-      );
+      )
     },
     // Initialisation des événements.
     _initControls: function () {
       let self = this,
-          o = this.option();
+          o = this.option()
 
-      this.library = wp.media(o);
+      this.library = wp.media(o)
 
       this.library.on('select', function () {
         let selection = self.library.state().get('selection'),
-            items = [];
+            items = []
 
         selection.map(function (attachment) {
-          items.push(attachment.toJSON());
-        });
-        self._trigger('select', null, [items]);
-      });
+          items.push(attachment.toJSON())
+        })
+        self._trigger('select', null, [items])
+      })
     },
     // Initialisation des événements.
     _initEvents: function () {
-      this._on(this.el, {'click [data-control="media-library.open"]': this._onOpen});
+      this._on(this.el, {'click [data-control="media-library.open"]': this._onOpen})
     },
     // EVENENEMENTS.
     // -----------------------------------------------------------------------------------------------------------------
     _onOpen: function (e) {
-      e.preventDefault();
-      this.open();
+      e.preventDefault()
+      this.open()
     },
     // ACCESSEURS.
     // -----------------------------------------------------------------------------------------------------------------
     open: function () {
-      this.library.open();
+      this.library.open()
     }
-  });
+  })
 
   $(document).ready(function () {
-    $('[data-control="media-library"]').tifyMediaLibrary();
+    $('[data-control="media-library"]').tifyMediaLibrary()
 
-    $.tify.observe('[data-control="media-library"]', function (i, target) {
-      $(target).tifyMediaLibrary();
-    });
-  });
-});
+    MutationObserver('[data-control="media-library"]', function (target) {
+      $(target).tifyMediaLibrary()
+    })
+  })
+})
