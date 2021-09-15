@@ -1,24 +1,18 @@
 {
   "name": "pollen-solutions/partial",
   "description": "Pollen Partial Component - Collection of web user interfaces.",
-  "homepage": "https://www.presstify.com/pollen-solutions/partial/",
+  "homepage": "https://github.com/milkcreation/pollen-partial.git",
   "keywords": [
     "pollen-solutions",
     "component",
     "partial"
   ],
-  "time": "2021-07-15",
+  "time": "2021-09-15",
   "license": "MIT",
   "authors": [
     {
       "name": "Jordy Manner",
       "email": "jordy@presstify.com"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://composer.presstify.com/pollen-solutions/"
     }
   ],
   "require": {
